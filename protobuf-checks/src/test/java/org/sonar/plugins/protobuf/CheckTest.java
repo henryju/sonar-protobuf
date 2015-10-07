@@ -17,24 +17,11 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.protobuf.checks;
+package org.sonar.plugins.protobuf;
 
-import com.google.common.collect.ImmutableList;
+import org.sonar.squidbridge.checks.CheckMessagesVerifierRule;
 
-import java.util.List;
+abstract public class CheckTest {
 
-public class CheckList {
-
-  public static final String REPOSITORY_KEY = "proto";
-
-  public static final String SONAR_WAY_PROFILE = "SonarQube way";
-
-  private CheckList() {
-  }
-
-  public static List<Class> getChecks() {
-    return ImmutableList.<Class>of(
-      MessageNameCheck.class
-      );
-  }
+  protected CheckMessagesVerifierRule checkMessagesVerifier = new CheckMessagesVerifierRule();
 }
