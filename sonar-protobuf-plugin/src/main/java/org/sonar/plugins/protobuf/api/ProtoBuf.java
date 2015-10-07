@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
  */
 public final class ProtoBuf extends AbstractLanguage {
 
-  public static final String NAME = "PROTO";
+  public static final String NAME = "Protocol Buffers";
   public static final String KEY = "proto";
 
   public static final String DEFAULT_FILE_SUFFIXES = "proto";

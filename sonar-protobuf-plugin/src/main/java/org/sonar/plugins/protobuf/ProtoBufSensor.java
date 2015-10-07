@@ -35,6 +35,7 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.protobuf.api.ProtoBuf;
+import org.sonar.plugins.protobuf.api.visitors.ProtoBufCheck;
 import org.sonar.protobuf.checks.CheckList;
 import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.api.CodeVisitor;
@@ -80,7 +81,7 @@ public class ProtoBufSensor implements Sensor {
   @Override
   public void analyse(Project module, SensorContext context) {
     List<CodeVisitor> visitors = getCheckVisitors();
-/**
+
     ImmutableList.Builder<ProtoBufCheck> phpCheckBuilder = ImmutableList.builder();
 
     for (CodeVisitor codeVisitor : visitors) {
@@ -88,14 +89,14 @@ public class ProtoBufSensor implements Sensor {
         phpCheckBuilder.add((ProtoBufCheck) codeVisitor);
       }
     }
-
+/*
     ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), phpCheckBuilder.build());
     ArrayList<InputFile> inputFiles = Lists.newArrayList(fileSystem.inputFiles(mainFilePredicate));
 
     for (InputFile inputFile : inputFiles) {
       saveIssues(analyzer.analyze(inputFile.file()), inputFile);
     }
-    */
+   */ 
   }
 
   @Override

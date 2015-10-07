@@ -1,7 +1,6 @@
-SonarQube Protocol Buffer plugin
-=========================
+SonarQube Protocol Buffers Plugin
+=================================
 
-### Build status
+### Build Status
 
 [![Build Status](https://travis-ci.org/henryju/sonar-protobuf.svg?branch=master)](https://travis-ci.org/henryju/sonar-protobuf)
-
