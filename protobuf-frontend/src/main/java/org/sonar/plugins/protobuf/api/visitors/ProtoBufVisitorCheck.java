@@ -22,7 +22,7 @@ package org.sonar.plugins.protobuf.api.visitors;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
-import org.sonar.plugins.protobuf.api.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;

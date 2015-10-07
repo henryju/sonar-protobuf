@@ -17,25 +17,20 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.visitors;
+package org.sonar.protobuf.parser;
 
-import com.google.common.annotations.Beta;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
-import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
+import com.sonar.sslr.api.Grammar;
+import org.junit.Test;
+import org.sonar.protobuf.utils.Assertions;
 
-@Beta
-public interface VisitorCheck extends ProtoBufCheck {
+public class MessageTest {
 
-  void visitToken(SyntaxToken token);
+  Grammar g = ProtoBufLexicalGrammar.createGrammarBuilder().build();
 
-  void visitTrivia(SyntaxTrivia trivia);
+  @Test
+  public void ok() {
+    Assertions.assertThat(ProtoBufLexicalGrammar.MESSAGE)
+      .matches("message Foo { }");
+  }
 
-  void visitProtoBufUnit(ProtoBufUnitTree tree);
-
-  void visitMessage(MessageTree message);
-
-  void visitIdentifier(IdentifierTree identifier);
 }

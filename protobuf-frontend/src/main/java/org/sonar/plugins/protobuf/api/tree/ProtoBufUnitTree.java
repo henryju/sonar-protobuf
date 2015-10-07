@@ -17,25 +17,14 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.visitors;
+package org.sonar.plugins.protobuf.api.tree;
 
-import com.google.common.annotations.Beta;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
-import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 
-@Beta
-public interface VisitorCheck extends ProtoBufCheck {
+public interface ProtoBufUnitTree extends Tree {
 
-  void visitToken(SyntaxToken token);
+  List<MessageTree> messages();
 
-  void visitTrivia(SyntaxTrivia trivia);
-
-  void visitProtoBufUnit(ProtoBufUnitTree tree);
-
-  void visitMessage(MessageTree message);
-
-  void visitIdentifier(IdentifierTree identifier);
+  SyntaxToken eofToken();
 }

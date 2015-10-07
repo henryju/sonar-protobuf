@@ -17,22 +17,12 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.protobuf.parser;
+package org.sonar.protobuf.api;
 
-import com.sonar.sslr.api.Grammar;
-import org.junit.Test;
-import org.sonar.protobuf.grammar.ProtobufGrammar;
+import java.nio.charset.Charset;
 
-import static org.sonar.sslr.tests.Assertions.assertThat;
+public interface CharsetAwareVisitor {
 
-public class MessageDeclTest {
-
-  Grammar g = ProtobufGrammar.createGrammarBuilder().build();
-
-  @Test
-  public void ok() {
-    assertThat(g.rule(ProtobufGrammar.MESSAGE_DECL))
-      .matches("message Foo {}");
-  }
+  void setCharset(Charset charset);
 
 }

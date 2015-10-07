@@ -21,7 +21,9 @@ package org.sonar.plugins.protobuf.api.tree;
 
 import com.google.common.annotations.Beta;
 import com.sonar.sslr.api.AstNodeType;
-import org.sonar.plugins.protobuf.api.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
+import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
 import org.sonar.sslr.grammar.GrammarRuleKey;
 
@@ -42,7 +44,27 @@ public interface Tree {
     /**
      * {@link CompilationUnitTree}
      */
-    PROTO_UNIT(ProtoBufUnitTree.class);
+    PROTO_UNIT(ProtoBufUnitTree.class),
+
+    /**
+     * {@link MessageTree}
+     */
+    MESSAGE(MessageTree.class),
+
+    /**
+     * {@link IdentifierTree}
+     */
+    IDENTIFIER(IdentifierTree.class),
+
+    /**
+     * {@link SyntaxToken}
+     */
+    TOKEN(SyntaxToken.class),
+
+    /**
+     * {@link SyntaxToken}
+     */
+    TRIVIA(SyntaxTrivia.class);
 
     final Class<? extends Tree> associatedInterface;
 

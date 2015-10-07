@@ -17,25 +17,39 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.visitors;
+package org.sonar.protobuf.api;
 
-import com.google.common.annotations.Beta;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
-import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
+import com.sonar.sslr.api.AstNode;
+import com.sonar.sslr.api.TokenType;
+import org.sonar.sslr.grammar.GrammarRuleKey;
 
-@Beta
-public interface VisitorCheck extends ProtoBufCheck {
+public enum ProtoBufPunctuator implements TokenType,GrammarRuleKey {
 
-  void visitToken(SyntaxToken token);
+  EQU("="),
 
-  void visitTrivia(SyntaxTrivia trivia);
+  LCURLYBRACE("{"),
+  RCURLYBRACE("}"),
+  SEMICOLON(";"),
+  COMMA(",");
 
-  void visitProtoBufUnit(ProtoBufUnitTree tree);
+  private final String value;
 
-  void visitMessage(MessageTree message);
+  private ProtoBufPunctuator(String value) {
+    this.value = value;
+  }
 
-  void visitIdentifier(IdentifierTree identifier);
+  @Override
+  public boolean hasToBeSkippedFromAst(AstNode astNode) {
+    return false;
+  }
+
+  @Override
+  public String getName() {
+    return name();
+  }
+
+  @Override
+  public String getValue() {
+    return value;
+  }
 }

@@ -22,7 +22,7 @@ package org.sonar.plugins.protobuf.api.visitors;
 import com.google.common.annotations.Beta;
 import java.io.File;
 import java.util.List;
-import org.sonar.plugins.protobuf.api.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.squidbridge.api.CodeVisitor;
 
 /**

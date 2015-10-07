@@ -17,12 +17,14 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api;
+package org.sonar.protobuf;
 
-import org.sonar.plugins.protobuf.api.tree.Tree;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
+import java.nio.charset.Charset;
+import org.sonar.squidbridge.api.SquidConfiguration;
 
-public interface ProtoBufUnitTree extends Tree {
+public class ProtoBufConfiguration extends SquidConfiguration {
 
-  SyntaxToken eofToken();
+  public ProtoBufConfiguration(Charset charset) {
+    super(charset);
+  }
 }

@@ -17,49 +17,43 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.protobuf.tree.visitors;
+package org.sonar.protobuf;
 
 import com.google.common.collect.ImmutableList;
+import com.sonar.sslr.api.typed.ActionParser;
 import java.io.File;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.plugins.protobuf.api.visitors.CheckContext;
+import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.visitors.Issue;
+import org.sonar.plugins.protobuf.api.visitors.ProtoBufCheck;
+import org.sonar.protobuf.parser.ProtoBufParserBuilder;
 
-public class ProtoBufCheckContext implements CheckContext {
+public class ProtoBufAnalyzer {
 
-  private final File file;
-  private final ProtoBufUnitTree tree;
-  private List<Issue> issues;
+  private final ActionParser<Tree> parser;
+  private final ImmutableList<ProtoBufCheck> checks;
 
-  public ProtoBufCheckContext(File file, ProtoBufUnitTree tree) {
-    this.file = file;
-    this.tree = tree;
-    this.issues = new ArrayList<>();
+  public ProtoBufAnalyzer(Charset charset, ImmutableList<ProtoBufCheck> checks) {
+    this.parser = ProtoBufParserBuilder.createParser(charset);
+    this.checks = checks;
+
+    for (ProtoBufCheck check : checks) {
+      check.init();
+    }
   }
 
-  @Override
-  public ProtoBufUnitTree tree() {
-    return tree;
-  }
+  public List<Issue> analyze(File file) {
+    // fixme : handle parsing exceptions
+    ProtoBufUnitTree tree = (ProtoBufUnitTree) parser.parse(file);
 
-  @Override
-  public ProtoBufIssue newIssue(String ruleKey, String message) {
-    ProtoBufIssue issue = new ProtoBufIssue(ruleKey, message);
-    issues.add(issue);
+    ImmutableList.Builder<Issue> issuesBuilder = ImmutableList.builder();
+    for (ProtoBufCheck check : checks) {
+      issuesBuilder.addAll(check.analyze(file, tree));
+    }
 
-    return issue;
-  }
-
-  @Override
-  public File file() {
-    return file;
-  }
-
-  @Override
-  public ImmutableList<Issue> getIssues() {
-    return ImmutableList.copyOf(issues);
+    return issuesBuilder.build();
   }
 
 }

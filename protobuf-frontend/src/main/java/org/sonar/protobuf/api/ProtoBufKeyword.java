@@ -17,33 +17,46 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.visitors;
+package org.sonar.protobuf.api;
 
-import java.io.File;
-import java.util.List;
-import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.protobuf.tree.visitors.ProtoBufCheckContext;
+import com.sonar.sslr.api.AstNode;
+import com.sonar.sslr.api.TokenType;
+import org.sonar.sslr.grammar.GrammarRuleKey;
 
-public abstract class ProtoBufSubscriptionCheck extends ProtoBufTreeSubscriber implements ProtoBufCheck {
+public enum ProtoBufKeyword implements TokenType,GrammarRuleKey {
 
-  private CheckContext context;
+  SYNTAX("syntax"),
+  MESSAGE("message"),
+  SERVICE("service");
 
-  @Override
-  public CheckContext context() {
-    return context;
+  private final String value;
+
+  private ProtoBufKeyword(String value) {
+    this.value = value;
   }
 
   @Override
-  public void init() {
-    // Default behavior : do nothing.
+  public boolean hasToBeSkippedFromAst(AstNode astNode) {
+    return false;
   }
 
   @Override
-  public final List<Issue> analyze(File file, ProtoBufUnitTree tree) {
-    this.context = new ProtoBufCheckContext(file, tree);
-    scanTree(context.tree());
+  public String getName() {
+    return name();
+  }
 
-    return context().getIssues();
+  @Override
+  public String getValue() {
+    return value;
+  }
+
+  public static String[] getKeywordValues() {
+    ProtoBufKeyword[] keywordsEnum = ProtoBufKeyword.values();
+    String[] keywords = new String[keywordsEnum.length];
+    for (int i = 0; i < keywords.length; i++) {
+      keywords[i] = keywordsEnum[i].getValue();
+    }
+    return keywords;
   }
 
 }
