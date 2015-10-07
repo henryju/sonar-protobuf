@@ -32,7 +32,7 @@
     <module>sonar-protobuf-plugin</module>
     <module>protobuf-frontend</module>
     <!-- <module>sslr-protobuf-toolkit</module> -->
-    <!-- <module>protobuf-checks</module> -->
+    <module>protobuf-checks</module>
   </modules>
 
 

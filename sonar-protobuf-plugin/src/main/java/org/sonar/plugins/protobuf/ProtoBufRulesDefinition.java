@@ -19,24 +19,18 @@
  */
 package org.sonar.plugins.protobuf;
 
-import java.util.List;
+import org.sonar.api.server.rule.RulesDefinition;
 
-import com.google.common.collect.ImmutableList;
+public class ProtoBufRulesDefinition implements RulesDefinition {
 
-import org.sonar.api.SonarPlugin;
+  private static final String REPOSITORY_NAME = "SonarQube";
 
-public class ProtoBufPlugin extends SonarPlugin {
+  @Override
+  public void define(Context context) {
 
-  public static final String FILE_SUFFIXES_KEY = "sonar.proto.file.suffixes";
-
-  /**
-   * Gets the extensions.
-   *
-   * @return the extensions
-   * @see org.sonar.api.SonarPlugin#getExtensions()
-   */
-  @Override 
-  public List getExtensions() {
-    return ImmutableList.of();
+    // NewRepository repository = context.createRepository(CheckList.REPOSITORY_KEY, Php.KEY).setName(REPOSITORY_NAME);
+    // AnnotationBasedRulesDefinition.load(repository, Php.KEY, CheckList.getChecks());
+    // repository.done();
   }
+
 }

@@ -19,24 +19,23 @@
  */
 package org.sonar.plugins.protobuf;
 
-import java.util.List;
+import org.sonar.api.profiles.AnnotationProfileParser;
+import org.sonar.api.profiles.ProfileDefinition;
+import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.utils.ValidationMessages;
 
-import com.google.common.collect.ImmutableList;
+public final class ProtoBufProfile extends ProfileDefinition {
 
-import org.sonar.api.SonarPlugin;
+  private final AnnotationProfileParser annotationProfileParser;
 
-public class ProtoBufPlugin extends SonarPlugin {
+  public ProtoBufProfile(AnnotationProfileParser annotationProfileParser) {
+    this.annotationProfileParser = annotationProfileParser;
+  }
 
-  public static final String FILE_SUFFIXES_KEY = "sonar.proto.file.suffixes";
-
-  /**
-   * Gets the extensions.
-   *
-   * @return the extensions
-   * @see org.sonar.api.SonarPlugin#getExtensions()
-   */
-  @Override 
-  public List getExtensions() {
-    return ImmutableList.of();
+  @Override
+  public RulesProfile createProfile(ValidationMessages validation) {
+    return null;
+    // return annotationProfileParser.parse(CheckList.REPOSITORY_KEY, CheckList.SONAR_WAY_PROFILE, Php.KEY, CheckList.getChecks(),
+    // validation);
   }
 }
