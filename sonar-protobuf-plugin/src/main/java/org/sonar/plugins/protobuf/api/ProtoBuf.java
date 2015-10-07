@@ -58,7 +58,7 @@ public final class ProtoBuf extends AbstractLanguage {
   /**
    * {@inheritDoc}
    */
-  @Override 
+  @Override
   public String[] getFileSuffixes() {
     String[] suffixes = filterEmptyStrings(settings.getStringArray(ProtoBufPlugin.FILE_SUFFIXES_KEY));
     if (suffixes.length == 0) {

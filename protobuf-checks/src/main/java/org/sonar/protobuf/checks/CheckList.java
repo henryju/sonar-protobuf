@@ -17,26 +17,22 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf;
+package org.sonar.protobuf.checks;
 
-import org.sonar.api.profiles.AnnotationProfileParser;
-import org.sonar.api.profiles.ProfileDefinition;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.utils.ValidationMessages;
-import org.sonar.plugins.protobuf.api.ProtoBuf;
-import org.sonar.protobuf.checks.CheckList;
+import com.google.common.collect.ImmutableList;
 
-public final class ProtoBufProfile extends ProfileDefinition {
+import java.util.List;
 
-  private final AnnotationProfileParser annotationProfileParser;
+public class CheckList {
 
-  public ProtoBufProfile(AnnotationProfileParser annotationProfileParser) {
-    this.annotationProfileParser = annotationProfileParser;
+  public static final String REPOSITORY_KEY = "proto";
+
+  public static final String SONAR_WAY_PROFILE = "SonarQube way";
+
+  private CheckList() {
   }
 
-  @Override
-  public RulesProfile createProfile(ValidationMessages validation) {
-    return annotationProfileParser.parse(CheckList.REPOSITORY_KEY, CheckList.SONAR_WAY_PROFILE, ProtoBuf.KEY, CheckList.getChecks(),
-      validation);
+  public static List<Class> getChecks() {
+    return ImmutableList.<Class>of();
   }
 }

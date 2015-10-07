@@ -20,6 +20,9 @@
 package org.sonar.plugins.protobuf;
 
 import org.sonar.api.server.rule.RulesDefinition;
+import org.sonar.plugins.protobuf.api.ProtoBuf;
+import org.sonar.protobuf.checks.CheckList;
+import org.sonar.squidbridge.annotations.AnnotationBasedRulesDefinition;
 
 public class ProtoBufRulesDefinition implements RulesDefinition {
 
@@ -27,10 +30,9 @@ public class ProtoBufRulesDefinition implements RulesDefinition {
 
   @Override
   public void define(Context context) {
-
-    // NewRepository repository = context.createRepository(CheckList.REPOSITORY_KEY, Php.KEY).setName(REPOSITORY_NAME);
-    // AnnotationBasedRulesDefinition.load(repository, Php.KEY, CheckList.getChecks());
-    // repository.done();
+    NewRepository repository = context.createRepository(CheckList.REPOSITORY_KEY, ProtoBuf.KEY).setName(REPOSITORY_NAME);
+    AnnotationBasedRulesDefinition.load(repository, ProtoBuf.KEY, CheckList.getChecks());
+    repository.done();
   }
 
 }

@@ -21,22 +21,47 @@ package org.sonar.plugins.protobuf;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import org.sonar.api.SonarPlugin;
+import org.sonar.api.config.PropertyDefinition;
+import org.sonar.api.resources.Qualifiers;
+import org.sonar.plugins.protobuf.api.ProtoBuf;
+
+import com.google.common.collect.ImmutableList;
 
 public class ProtoBufPlugin extends SonarPlugin {
 
   public static final String FILE_SUFFIXES_KEY = "sonar.proto.file.suffixes";
 
+  public static final String PROTO_CATEGORY = "Protocol Buffers";
+  public static final String GENERAL_SUBCATEGORY = "General";
+
   /**
    * Gets the extensions.
-   *
+   * 
    * @return the extensions
    * @see org.sonar.api.SonarPlugin#getExtensions()
    */
-  @Override 
+  @Override
   public List getExtensions() {
-    return ImmutableList.of();
+    return ImmutableList.of(
+
+      ProtoBuf.class,
+
+      ProtoBufSensor.class,
+
+      ProtoBufRulesDefinition.class,
+      ProtoBufProfile.class,
+
+      // Properties
+      PropertyDefinition.builder(FILE_SUFFIXES_KEY)
+        .defaultValue(ProtoBuf.DEFAULT_FILE_SUFFIXES)
+        .name("File Suffixes")
+        .description("Comma-separated list of suffixes of Protocol Buffers files to analyze.")
+        .onQualifiers(Qualifiers.MODULE, Qualifiers.PROJECT)
+        .category(PROTO_CATEGORY)
+        .subCategory(GENERAL_SUBCATEGORY)
+        .build()
+
+      );
   }
 }
