@@ -21,6 +21,7 @@ package org.sonar.plugins.protobuf.api.visitors;
 
 import com.google.common.annotations.Beta;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
@@ -50,4 +51,6 @@ public interface VisitorCheck extends ProtoBufCheck {
   void visitField(FieldTree fieldTree);
 
   void visitFieldRule(FieldRuleTree fieldRule);
+
+  void visitFieldType(FieldTypeTree fieldTypeTree);
 }

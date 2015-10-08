@@ -19,28 +19,33 @@
  */
 package org.sonar.plugins.protobuf.api.visitors;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Stack;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.source.Highlightable;
+import org.sonar.api.source.Symbol;
+import org.sonar.api.source.Symbolizable;
+import org.sonar.api.source.Symbolizable.SymbolTableBuilder;
+import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
-import org.sonar.protobuf.api.ProtoBufKeyword;
 
-public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
+public class SymbolHighlighterVisitor extends ProtoBufVisitorCheck {
 
-  private Highlightable.HighlightingBuilder highlighting;
-  private final Set<String> keywords;
+  private SymbolTableBuilder symbolTableBuilder;
 
   private final ResourcePerspectives resourcePerspectives;
   private final FileSystem fs;
@@ -48,39 +53,56 @@ public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
 
   private List<Integer> lineStart;
 
-  public SyntaxHighlighterVisitor(ResourcePerspectives resourcePerspectives, FileSystem fs) {
+  private Stack<String> msgStack = new Stack<>();
+
+  private Map<String, Symbol> messageDefs = new HashMap<>();
+  private Multimap<String, SyntaxToken> referencesByFqn = HashMultimap.create();
+
+  public SymbolHighlighterVisitor(ResourcePerspectives resourcePerspectives, FileSystem fs) {
     this.resourcePerspectives = resourcePerspectives;
     this.fs = fs;
     this.charset = fs.encoding();
-
-    ImmutableSet.Builder<String> keywordsBuilder = ImmutableSet.builder();
-    keywordsBuilder.add(ProtoBufKeyword.getKeywordValues());
-    keywords = keywordsBuilder.build();
   }
 
   @Override
-  public void visitToken(SyntaxToken token) {
-    String text = token.text();
-    if (keywords.contains(text)) {
-      highlighting.highlight(start(token), end(token), "k");
+  public void visitMessage(MessageTree tree) {
+    String message = tree.name();
+    msgStack.push(message);
+    messageDefs.put(fqn(), symbolTableBuilder.newSymbol(start(tree.identifier().token()), end(tree.identifier().token())));
+    super.visitMessage(tree);
+    msgStack.pop();
+  }
+
+  @Override
+  public void visitField(FieldTree tree) {
+    if (!tree.isScalar()) {
+      referencesByFqn.put(tree.type().text(), tree.type().identifier().token());
     }
-    scan(token);
+    super.visitField(tree);
   }
 
-  @Override
-  public void visitTrivia(SyntaxTrivia syntaxTrivia) {
-    highlighting.highlight(start(syntaxTrivia), end(syntaxTrivia), "cppd");
+  private String fqn() {
+    return Joiner.on('.').join(msgStack);
   }
 
   @Override
   public List<Issue> analyze(File file, ProtoBufUnitTree tree) {
-    Highlightable highlightable = resourcePerspectives.as(Highlightable.class, inputFromIOFile(file));
-    highlighting = highlightable.newHighlighting();
+    Symbolizable symbolizable = resourcePerspectives.as(Symbolizable.class, inputFromIOFile(file));
+    symbolTableBuilder = symbolizable.newSymbolTableBuilder();
     lineStart = startLines(file, this.charset);
 
     List<Issue> issues = super.analyze(file, tree);
 
-    highlighting.done();
+    for (String fqn : referencesByFqn.keySet()) {
+      Symbol def = messageDefs.get(fqn);
+      if (def != null) {
+        for (SyntaxToken ref : referencesByFqn.get(fqn)) {
+          symbolTableBuilder.newReference(def, start(ref));
+        }
+      }
+    }
+
+    symbolizable.setSymbolTable(symbolTableBuilder.build());
     return issues;
   }
 

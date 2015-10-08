@@ -19,15 +19,14 @@
  */
 package org.sonar.plugins.protobuf.api.tree;
 
-import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 
-public interface MessageTree extends Tree {
+public interface FieldTypeTree extends Tree {
 
-  String name();
+  boolean isScalar();
+
+  String text();
 
   IdentifierTree identifier();
-
-  List<FieldTree> fields();
 
 }

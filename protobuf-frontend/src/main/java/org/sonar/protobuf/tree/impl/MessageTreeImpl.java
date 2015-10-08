@@ -67,6 +67,11 @@ public class MessageTreeImpl extends ProtoBufTree implements MessageTree {
   }
 
   @Override
+  public IdentifierTree identifier() {
+    return this.name;
+  }
+
+  @Override
   public List<FieldTree> fields() {
     return fields;
   }

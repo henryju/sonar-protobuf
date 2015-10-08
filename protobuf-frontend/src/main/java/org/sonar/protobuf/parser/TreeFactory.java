@@ -23,6 +23,7 @@ import com.sonar.sslr.api.typed.Optional;
 import java.util.Collections;
 import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
@@ -36,6 +37,7 @@ import org.sonar.protobuf.tree.impl.ProtoBufUnitTreeImpl;
 import org.sonar.protobuf.tree.impl.SyntaxTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.FieldRuleTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.FieldScalarTypeTreeImpl;
+import org.sonar.protobuf.tree.impl.expression.FieldTypeTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.IdentifierTreeImpl;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
@@ -62,7 +64,7 @@ public class TreeFactory {
     return new FieldScalarTypeTreeImpl(token);
   }
 
-  public FieldTree field(Optional<InternalSyntaxToken> spacing, Optional<FieldRuleTree> rule, IdentifierTree type, IdentifierTree identifier, InternalSyntaxToken eq,
+  public FieldTree field(Optional<InternalSyntaxToken> spacing, Optional<FieldRuleTree> rule, FieldTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq,
     InternalSyntaxToken tag,
     InternalSyntaxToken colon) {
     return new FieldTreeImpl(rule.orNull(), type, identifier, eq, tag, colon);
@@ -70,6 +72,10 @@ public class TreeFactory {
 
   public FieldRuleTree fieldRule(InternalSyntaxToken token) {
     return new FieldRuleTreeImpl(token);
+  }
+
+  public FieldTypeTree fieldType(IdentifierTree identifier) {
+    return new FieldTypeTreeImpl(identifier);
   }
 
   private static <T extends Tree> List<T> optionalList(Optional<List<T>> list) {

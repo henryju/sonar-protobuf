@@ -69,6 +69,11 @@ public interface Tree {
     FIELD_RULE(FieldRuleTree.class),
 
     /**
+     * {@link FieldTypeTree}
+     */
+    FIELD_TYPE(FieldTypeTree.class),
+
+    /**
      * {@link FieldScalarTypeTree}
      */
     FIELD_SCALAR_TYPE(FieldScalarTypeTree.class),

@@ -21,6 +21,7 @@ package org.sonar.protobuf.parser;
 
 import com.sonar.sslr.api.typed.GrammarBuilder;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
@@ -70,11 +71,16 @@ public class ProtoBufGrammar {
     return b.<FieldTree>nonterminal(ProtoBufLexicalGrammar.FIELD).is(
       f.field(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
         b.optional(FIELD_RULE()),
-        b.firstOf(FIELD_SCALAR_TYPE(), IDENTIFIER()),
+        FIELD_TYPE(),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.EQU),
         b.token(ProtoBufLexicalGrammar.INTEGER_LITERAL),
         b.token(ProtoBufPunctuator.SEMICOLON)));
+  }
+
+  public FieldTypeTree FIELD_TYPE() {
+    return b.<FieldTypeTree>nonterminal(ProtoBufLexicalGrammar.FIELD_TYPE).is(
+      f.fieldType(b.firstOf(FIELD_SCALAR_TYPE(), IDENTIFIER())));
   }
 
   public IdentifierTree IDENTIFIER() {

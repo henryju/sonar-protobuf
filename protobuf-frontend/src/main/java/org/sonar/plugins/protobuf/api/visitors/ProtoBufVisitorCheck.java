@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
@@ -71,6 +72,11 @@ public abstract class ProtoBufVisitorCheck implements VisitorCheck {
 
   @Override
   public void visitIdentifier(IdentifierTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitFieldType(FieldTypeTree tree) {
     scan(tree);
   }
 

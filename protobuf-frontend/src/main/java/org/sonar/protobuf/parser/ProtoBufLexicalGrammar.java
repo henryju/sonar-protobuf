@@ -52,6 +52,7 @@ public enum ProtoBufLexicalGrammar implements GrammarRuleKey {
   MESSAGE,
 
   FIELD,
+  FIELD_TYPE,
   FIELD_RULE,
   FIELD_SCALAR_TYPE;
 

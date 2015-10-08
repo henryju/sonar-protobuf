@@ -19,11 +19,10 @@
  */
 package org.sonar.plugins.protobuf;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -33,40 +32,29 @@ import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
-import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.protobuf.api.ProtoBuf;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufCheck;
+import org.sonar.plugins.protobuf.api.visitors.SymbolHighlighterVisitor;
 import org.sonar.plugins.protobuf.api.visitors.SyntaxHighlighterVisitor;
 import org.sonar.protobuf.ProtoBufAnalyzer;
 import org.sonar.protobuf.checks.CheckList;
-import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.api.CodeVisitor;
-import org.sonar.sslr.parser.LexerlessGrammar;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class ProtoBufSensor implements Sensor {
-
-  private static final Logger LOG = LoggerFactory.getLogger(ProtoBufSensor.class);
 
   private final ResourcePerspectives resourcePerspectives;
   private final FileSystem fileSystem;
   private final FilePredicate mainFilePredicate;
-  private final FileLinesContextFactory fileLinesContextFactory;
   private final Checks<CodeVisitor> checks;
-  private AstScanner<LexerlessGrammar> scanner;
-  private SensorContext context;
 
   public ProtoBufSensor(ResourcePerspectives resourcePerspectives, FileSystem filesystem,
-    FileLinesContextFactory fileLinesContextFactory, CheckFactory checkFactory) {
+    CheckFactory checkFactory) {
     this.checks = checkFactory
       .<CodeVisitor>create(CheckList.REPOSITORY_KEY)
       .addAnnotatedChecks(CheckList.getChecks());
     this.resourcePerspectives = resourcePerspectives;
-    this.fileLinesContextFactory = fileLinesContextFactory;
     this.fileSystem = filesystem;
     this.mainFilePredicate = fileSystem.predicates().and(
       fileSystem.predicates().hasType(InputFile.Type.MAIN),
@@ -86,17 +74,18 @@ public class ProtoBufSensor implements Sensor {
   public void analyse(Project module, SensorContext context) {
     List<CodeVisitor> visitors = getCheckVisitors();
 
-    ImmutableList.Builder<ProtoBufCheck> checkBuilder = ImmutableList.builder();
+    ImmutableList.Builder<ProtoBufCheck> protobufCheckBuilder = ImmutableList.builder();
 
     for (CodeVisitor codeVisitor : visitors) {
       if (codeVisitor instanceof ProtoBufCheck) {
-        checkBuilder.add((ProtoBufCheck) codeVisitor);
+        protobufCheckBuilder.add((ProtoBufCheck) codeVisitor);
       }
     }
 
-    checkBuilder.add(new SyntaxHighlighterVisitor(resourcePerspectives, fileSystem));
+    protobufCheckBuilder.add(new SyntaxHighlighterVisitor(resourcePerspectives, fileSystem));
+    protobufCheckBuilder.add(new SymbolHighlighterVisitor(resourcePerspectives, fileSystem));
 
-    ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), checkBuilder.build());
+    ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), protobufCheckBuilder.build());
     ArrayList<InputFile> inputFiles = Lists.newArrayList(fileSystem.inputFiles(mainFilePredicate));
 
     for (InputFile inputFile : inputFiles) {
