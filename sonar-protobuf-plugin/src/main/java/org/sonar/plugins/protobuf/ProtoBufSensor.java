@@ -86,17 +86,17 @@ public class ProtoBufSensor implements Sensor {
   public void analyse(Project module, SensorContext context) {
     List<CodeVisitor> visitors = getCheckVisitors();
 
-    ImmutableList.Builder<ProtoBufCheck> phpCheckBuilder = ImmutableList.builder();
+    ImmutableList.Builder<ProtoBufCheck> checkBuilder = ImmutableList.builder();
 
     for (CodeVisitor codeVisitor : visitors) {
       if (codeVisitor instanceof ProtoBufCheck) {
-        phpCheckBuilder.add((ProtoBufCheck) codeVisitor);
+        checkBuilder.add((ProtoBufCheck) codeVisitor);
       }
     }
 
-    phpCheckBuilder.add(new SyntaxHighlighterVisitor(resourcePerspectives, fileSystem));
+    checkBuilder.add(new SyntaxHighlighterVisitor(resourcePerspectives, fileSystem));
 
-    ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), phpCheckBuilder.build());
+    ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), checkBuilder.build());
     ArrayList<InputFile> inputFiles = Lists.newArrayList(fileSystem.inputFiles(mainFilePredicate));
 
     for (InputFile inputFile : inputFiles) {
@@ -106,18 +106,18 @@ public class ProtoBufSensor implements Sensor {
   }
 
   private void saveIssues(List<org.sonar.plugins.protobuf.api.visitors.Issue> issues, InputFile inputFile) {
-    for (org.sonar.plugins.protobuf.api.visitors.Issue phpIssue : issues) {
-      RuleKey ruleKey = RuleKey.of(CheckList.REPOSITORY_KEY, phpIssue.ruleKey());
+    for (org.sonar.plugins.protobuf.api.visitors.Issue issue : issues) {
+      RuleKey ruleKey = RuleKey.of(CheckList.REPOSITORY_KEY, issue.ruleKey());
       Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
 
       if (issuable != null) {
         Issuable.IssueBuilder issueBuilder = issuable.newIssueBuilder()
           .ruleKey(ruleKey)
-          .message(phpIssue.message())
-          .effortToFix(phpIssue.cost());
+          .message(issue.message())
+          .effortToFix(issue.cost());
 
-        if (phpIssue.line() > 0) {
-          issueBuilder.line(phpIssue.line());
+        if (issue.line() > 0) {
+          issueBuilder.line(issue.line());
         }
 
         issuable.addIssue(issueBuilder.build());
