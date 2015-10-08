@@ -61,13 +61,9 @@ public class SyntaxContentNotSupportedCheck extends ProtoBufVisitorCheck {
 
   @Override
   public void visitSyntax(SyntaxTree tree) {
-    System.out.println(tree.syntax());
-    if (tree != null) {
-      if (!supportedProtoBufVersions.contains(tree.syntax())) {
-        context().newIssue(SyntaxContentNotSupportedCheck.KEY, SyntaxContentNotSupportedCheck.MESSAGE).tree(tree);
-      }
+    if (!supportedProtoBufVersions.contains(tree.syntax())) {
+      context().newIssue(SyntaxContentNotSupportedCheck.KEY, SyntaxContentNotSupportedCheck.MESSAGE).tree(tree);
     }
-
   }
 
 }

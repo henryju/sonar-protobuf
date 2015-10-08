@@ -36,7 +36,9 @@ public class CheckList {
     return ImmutableList.<Class>of(
       MessageNameCheck.class,
       SyntaxContentNotSupportedCheck.class,
-      SyntaxMissingCheck.class
+      SyntaxMissingCheck.class,
+      RequiredFieldDeprecatedCheck.class,
+      RepeatedFieldNamingConventionCheck.class
       );
   }
 }

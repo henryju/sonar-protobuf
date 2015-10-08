@@ -1,0 +1,7 @@
+message Person {
+  required string name = 1;
+  required int32 id = 2;
+  optional string email = 3;
+
+  repeated PhoneNumber phones = 4; // NOK {{Remove the 's' at the end of "phones"}}
+}
