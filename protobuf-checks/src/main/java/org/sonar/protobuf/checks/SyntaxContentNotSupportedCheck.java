@@ -20,7 +20,6 @@
 package org.sonar.protobuf.checks;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.sonar.api.server.rule.RulesDefinition;
@@ -28,13 +27,10 @@ import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
-import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufVisitorCheck;
 import org.sonar.squidbridge.annotations.SqaleConstantRemediation;
 import org.sonar.squidbridge.annotations.SqaleSubCharacteristic;
 import org.sonar.squidbridge.annotations.Tags;
-
-import com.google.common.collect.ImmutableList;
 
 @Rule(
   key = SyntaxContentNotSupportedCheck.KEY,

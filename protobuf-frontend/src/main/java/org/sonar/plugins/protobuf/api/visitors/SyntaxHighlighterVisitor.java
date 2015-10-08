@@ -34,6 +34,7 @@ import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
+import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.protobuf.api.ProtoBufKeyword;
 
 import com.google.common.base.Throwables;
@@ -56,7 +57,6 @@ public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
     this.resourcePerspectives = resourcePerspectives;
     this.fs = fs;
     this.charset = fs.encoding();
-    ;
 
     ImmutableSet.Builder<String> keywordsBuilder = ImmutableSet.builder();
     keywordsBuilder.add(ProtoBufKeyword.getKeywordValues());
@@ -70,6 +70,11 @@ public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
       highlighting.highlight(start(token), end(token), "k");
     }
     scan(token);
+  }
+
+  @Override
+  public void visitTrivia(SyntaxTrivia syntaxTrivia) {
+    highlighting.highlight(start(syntaxTrivia), end(syntaxTrivia), "cppd");
   }
 
   @Override

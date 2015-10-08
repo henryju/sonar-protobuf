@@ -45,11 +45,11 @@ public class RepeatedFieldNamingConventionCheck extends ProtoBufVisitorCheck {
 
   @Override
   public void visitField(FieldTree tree) {
-    if (StringUtils.equalsIgnoreCase("repeated", tree.rule().keyword().text())) {
-      if (tree.name().endsWith("s")) {
-        String message = String.format(MESSAGE, tree.name());
-        context().newIssue(RepeatedFieldNamingConventionCheck.KEY, message).tree(tree);
-      }
+    if (tree.rule() != null
+      && StringUtils.equalsIgnoreCase("repeated", tree.rule().keyword().text())
+      && tree.name().endsWith("s")) {
+      String message = String.format(MESSAGE, tree.name());
+      context().newIssue(RepeatedFieldNamingConventionCheck.KEY, message).tree(tree);
     }
   }
 

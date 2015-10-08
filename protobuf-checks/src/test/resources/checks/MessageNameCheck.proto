@@ -1,1 +1,1 @@
-message badNAme { } // NOK {{Rename Message "badNAme" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.}}
+message badNAme { } // NOK {{Rename "badNAme" to match the regular expression ^[A-Z][a-zA-Z0-9]*$.}}

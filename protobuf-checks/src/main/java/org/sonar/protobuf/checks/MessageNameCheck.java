@@ -38,7 +38,7 @@ import com.google.common.collect.ImmutableList;
 
 @Rule(
   key = MessageNameCheck.KEY,
-  name = "Message names should comply with a naming convention",
+  name = "Message name should comply with a naming convention",
   priority = Priority.MINOR,
   tags = {Tags.CONVENTION})
 @BelongsToProfile(title = CheckList.SONAR_WAY_PROFILE, priority = Priority.MAJOR)
@@ -47,7 +47,7 @@ import com.google.common.collect.ImmutableList;
 public class MessageNameCheck extends ProtoBufSubscriptionCheck {
 
   public static final String KEY = "PB1000";
-  private static final String MESSAGE = "Rename Message \"%s\" to match the regular expression %s.";
+  private static final String MESSAGE = "Rename \"%s\" to match the regular expression %s.";
 
   private static final String DEFAULT = "^[A-Z][a-zA-Z0-9]*$";
   private Pattern pattern = null;

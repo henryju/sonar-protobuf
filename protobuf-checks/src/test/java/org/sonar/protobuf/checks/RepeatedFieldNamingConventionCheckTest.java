@@ -19,8 +19,6 @@
  */
 package org.sonar.protobuf.checks;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.sonar.plugins.protobuf.TestUtils;
 import org.sonar.plugins.protobuf.api.tests.ProtoBufCheckTest;
