@@ -19,17 +19,11 @@
  */
 package org.sonar.plugins.protobuf.api.visitors;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Set;
+
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.source.Highlightable;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
@@ -37,21 +31,15 @@ import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.protobuf.api.ProtoBufKeyword;
 
-public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
+import com.google.common.collect.ImmutableSet;
+
+public class SyntaxHighlighterVisitor extends AbstractHighlighterVisitor {
 
   private Highlightable.HighlightingBuilder highlighting;
   private final Set<String> keywords;
 
-  private final ResourcePerspectives resourcePerspectives;
-  private final FileSystem fs;
-  private final Charset charset;
-
-  private List<Integer> lineStart;
-
   public SyntaxHighlighterVisitor(ResourcePerspectives resourcePerspectives, FileSystem fs) {
-    this.resourcePerspectives = resourcePerspectives;
-    this.fs = fs;
-    this.charset = fs.encoding();
+    super(resourcePerspectives, fs);
 
     ImmutableSet.Builder<String> keywordsBuilder = ImmutableSet.builder();
     keywordsBuilder.add(ProtoBufKeyword.getKeywordValues());
@@ -82,43 +70,6 @@ public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
 
     highlighting.done();
     return issues;
-  }
-
-  private InputFile inputFromIOFile(File file) {
-    return fs.inputFile(fs.predicates().is(file));
-  }
-
-  private int start(SyntaxToken token) {
-    return getOffset(token.line(), token.column());
-  }
-
-  private int end(SyntaxToken token) {
-    return getOffset(token.line(), token.column()) + token.text().length();
-  }
-
-  /**
-   * @param line starts from 1
-   * @param column starts from 0
-   */
-  private int getOffset(int line, int column) {
-    return lineStart.get(line - 1) + column;
-  }
-
-  private static List<Integer> startLines(File file, Charset charset) {
-    List<Integer> startLines = Lists.newArrayList();
-    final String content;
-    try {
-      content = Files.toString(file, charset);
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
-    }
-    startLines.add(0);
-    for (int i = 0; i < content.length(); i++) {
-      if (content.charAt(i) == '\n' || (content.charAt(i) == '\r' && i + 1 < content.length() && content.charAt(i + 1) != '\n')) {
-        startLines.add(i + 1);
-      }
-    }
-    return startLines;
   }
 
 }

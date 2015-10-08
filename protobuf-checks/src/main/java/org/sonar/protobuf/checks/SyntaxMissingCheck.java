@@ -54,7 +54,7 @@ public class SyntaxMissingCheck extends ProtoBufSubscriptionCheck {
 
   @Override
   public void visitNode(Tree tree) {
-    ProtoBufUnitTree protoUnitTree = ((ProtoBufUnitTree) tree);
+    ProtoBufUnitTree protoUnitTree = (ProtoBufUnitTree) tree;
     if (protoUnitTree.syntax() == null) {
       context().newIssue(SyntaxMissingCheck.KEY, SyntaxMissingCheck.MESSAGE).tree(tree);
     }

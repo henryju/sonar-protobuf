@@ -39,6 +39,9 @@ public class ProtoBufCheckTest {
 
   private static final ActionParser<Tree> parser = ProtoBufParserBuilder.createParser(Charsets.UTF_8);
 
+  private ProtoBufCheckTest() {
+  }
+
   public static void check(ProtoBufCheck check, File file) {
     ProtoBufUnitTree tree = (ProtoBufUnitTree) parser.parse(file);
     check.init();
@@ -90,7 +93,6 @@ public class ProtoBufCheckTest {
     }
   }
 
-  // NOK {{message here}}
   private static List<Issue> getExpectedIssues(File file, ProtoBufUnitTree tree) {
     IssueParser issueParser = new IssueParser();
     return issueParser.analyze(file, tree);
