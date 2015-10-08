@@ -19,18 +19,26 @@
  */
 package org.sonar.protobuf.checks;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.junit.Test;
 import org.sonar.plugins.protobuf.CheckTest;
 import org.sonar.plugins.protobuf.TestUtils;
 import org.sonar.plugins.protobuf.api.tests.ProtoBufCheckTest;
+import org.sonar.plugins.protobuf.api.visitors.Issue;
+import org.sonar.protobuf.tree.visitors.ProtoBufIssue;
 
-public class MessageNameCheckTest extends CheckTest {
+public class MessageNameCustomFormatCheckTest extends CheckTest {
 
   private MessageNameCheck check = new MessageNameCheck();
-  private String fileName = "MessageNameCheck.proto";
+  private String fileName = "MessageNameCustomFormatCheck.proto";
 
   @Test
-  public void defaultValue() throws Exception {
-    ProtoBufCheckTest.check(check, TestUtils.getCheckFile(fileName));
+  public void customFormat() throws Exception {
+    check.format = "^[A-Z]*$";
+    List<Issue> expectedIssues = new LinkedList<>();
+    expectedIssues.add(new ProtoBufIssue("test", "Rename Message \"badname\" to match the regular expression " + check.format + ".").line(1));
+    ProtoBufCheckTest.check(check, TestUtils.getCheckFile(fileName), expectedIssues);
   }
 }

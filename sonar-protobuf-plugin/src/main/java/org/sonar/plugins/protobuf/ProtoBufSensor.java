@@ -32,10 +32,13 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.FileLinesContextFactory;
 import org.sonar.api.resources.Project;
+import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.protobuf.api.ProtoBuf;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufCheck;
+import org.sonar.protobuf.ProtoBufAnalyzer;
 import org.sonar.protobuf.checks.CheckList;
 import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.api.CodeVisitor;
@@ -89,14 +92,34 @@ public class ProtoBufSensor implements Sensor {
         phpCheckBuilder.add((ProtoBufCheck) codeVisitor);
       }
     }
-/*
+
     ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), phpCheckBuilder.build());
     ArrayList<InputFile> inputFiles = Lists.newArrayList(fileSystem.inputFiles(mainFilePredicate));
 
     for (InputFile inputFile : inputFiles) {
       saveIssues(analyzer.analyze(inputFile.file()), inputFile);
     }
-   */ 
+
+  }
+
+  private void saveIssues(List<org.sonar.plugins.protobuf.api.visitors.Issue> issues, InputFile inputFile) {
+    for (org.sonar.plugins.protobuf.api.visitors.Issue phpIssue : issues) {
+      RuleKey ruleKey = RuleKey.of(CheckList.REPOSITORY_KEY, phpIssue.ruleKey());
+      Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
+
+      if (issuable != null) {
+        Issuable.IssueBuilder issueBuilder = issuable.newIssueBuilder()
+          .ruleKey(ruleKey)
+          .message(phpIssue.message())
+          .effortToFix(phpIssue.cost());
+
+        if (phpIssue.line() > 0) {
+          issueBuilder.line(phpIssue.line());
+        }
+
+        issuable.addIssue(issueBuilder.build());
+      }
+    }
   }
 
   @Override
