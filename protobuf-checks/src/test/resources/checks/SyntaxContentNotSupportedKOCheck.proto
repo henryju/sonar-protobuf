@@ -1,4 +1,4 @@
-syntax = "proto4"; // NOK {{\"syntax\" keyword can contain only 2 possible values : proto2 or proto3}}
+syntax = "proto4"; // NOK {{"syntax" keyword can contain only 2 possible values : proto2 or proto3}}
 
 message SearchRequest {
 

@@ -78,7 +78,7 @@ public class ProtoBufGrammar {
   }
 
   public IdentifierTree IDENTIFIER() {
-    return b.<IdentifierTree>nonterminal(ProtoBufLexicalGrammar.IDENTIFIER).is(
+    return b.<IdentifierTree>nonterminal().is(
       f.identifier(b.token(ProtoBufLexicalGrammar.IDENTIFIER)));
   }
 
