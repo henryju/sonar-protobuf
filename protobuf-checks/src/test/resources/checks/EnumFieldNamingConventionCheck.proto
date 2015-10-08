@@ -1,0 +1,10 @@
+enum Bar { 
+  first_VALUE = 1; // NOK {{Rename "first_VALUE" to match the regular expression ^[A-Z_]*$.}}
+  SECOND_VALUE = 2;
+  THIRD_value = 3; // NOK {{Rename "THIRD_value" to match the regular expression ^[A-Z_]*$.}}
+}
+
+enum Foo {
+  FIRST_VALUE = 1; // OK
+  SECOND_VALUE = 2; // OK
+}

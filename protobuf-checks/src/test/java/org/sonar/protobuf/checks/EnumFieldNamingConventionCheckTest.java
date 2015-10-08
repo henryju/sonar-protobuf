@@ -19,30 +19,18 @@
  */
 package org.sonar.protobuf.checks;
 
-import java.util.List;
+import org.junit.Test;
+import org.sonar.plugins.protobuf.TestUtils;
+import org.sonar.plugins.protobuf.api.tests.ProtoBufCheckTest;
 
-import com.google.common.collect.ImmutableList;
+public class EnumFieldNamingConventionCheckTest {
 
-public class CheckList {
+  private EnumFieldNamingConventionCheck check = new EnumFieldNamingConventionCheck();
+  private String fileName = "EnumFieldNamingConventionCheck.proto";
 
-  public static final String REPOSITORY_KEY = "protobuf";
-
-  public static final String SONAR_WAY_PROFILE = "SonarQube way";
-
-  private CheckList() {
+  @Test
+  public void defaultValue() throws Exception {
+    ProtoBufCheckTest.check(check, TestUtils.getCheckFile(fileName));
   }
 
-  public static List<Class> getChecks() {
-    return ImmutableList.<Class>of(
-      MessageNameCheck.class,
-      SyntaxContentNotSupportedCheck.class,
-      SyntaxMissingCheck.class,
-      RequiredFieldDeprecatedCheck.class,
-      RepeatedFieldNamingConventionCheck.class,
-      FieldMustNotBeCamelCaseCheck.class,
-      EnumNamingConventionCheck.class,
-      EnumFieldNamingConventionCheck.class,
-      EmptyEnumNamingConventionCheck.class
-      );
-  }
 }

@@ -73,8 +73,7 @@ public class MessageNameCheck extends ProtoBufSubscriptionCheck {
 
     if (!pattern.matcher(messageName).matches()) {
       String message = String.format(MESSAGE, messageName, this.format);
-      context().newIssue(MessageNameCheck.KEY, message)
-        .tree(tree);
+      context().newIssue(MessageNameCheck.KEY, message).tree(tree);
     }
   }
 

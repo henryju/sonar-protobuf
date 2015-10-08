@@ -25,29 +25,34 @@ import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.check.RuleProperty;
+import org.sonar.plugins.protobuf.api.tree.EnumTree;
+import org.sonar.plugins.protobuf.api.tree.EnumValueTree;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufVisitorCheck;
 import org.sonar.squidbridge.annotations.SqaleConstantRemediation;
 import org.sonar.squidbridge.annotations.SqaleSubCharacteristic;
 import org.sonar.squidbridge.annotations.Tags;
 
 @Rule(
-  key = FieldMustNotBeCamelCaseCheck.KEY,
-  name = "Use underscore_separated_names for field names – for example, song_name",
-  priority = Priority.MAJOR,
+  key = EnumFieldNamingConventionCheck.KEY,
+  name = "Enum Field name should comply with a naming convention",
+  priority = Priority.MINOR,
   tags = {Tags.CONVENTION})
 @BelongsToProfile(title = CheckList.SONAR_WAY_PROFILE, priority = Priority.MAJOR)
 @SqaleSubCharacteristic(RulesDefinition.SubCharacteristics.READABILITY)
 @SqaleConstantRemediation("5min")
-public class FieldMustNotBeCamelCaseCheck extends ProtoBufVisitorCheck {
+public class EnumFieldNamingConventionCheck extends ProtoBufVisitorCheck {
 
-  public static final String KEY = "PB1005";
-  private static final String MESSAGE = "Consider renaming the field \"%s\" to use underscore_separated_names";
+  public static final String KEY = "PB1007";
+  private static final String MESSAGE = "Rename \"%s\" to match the regular expression %s.";
 
-  private static final String DEFAULT = "^[a-z0-9_]*$";
+  private static final String DEFAULT = "^[A-Z_]*$";
   private Pattern pattern = null;
 
-  private String format = DEFAULT;
+  @RuleProperty(
+    key = "format",
+    defaultValue = DEFAULT)
+  String format = DEFAULT;
 
   @Override
   public void init() {
@@ -55,12 +60,13 @@ public class FieldMustNotBeCamelCaseCheck extends ProtoBufVisitorCheck {
   }
 
   @Override
-  public void visitField(FieldTree tree) {
-    String fieldName = tree.name();
+  public void visitEnumValue(EnumValueTree tree) {
+    String treeName = tree.name();
 
-    if (!pattern.matcher(fieldName).matches()) {
-      String message = String.format(MESSAGE, fieldName, this.format);
-      context().newIssue(FieldMustNotBeCamelCaseCheck.KEY, message).tree(tree);
+    if (!pattern.matcher(treeName).matches()) {
+      String message = String.format(MESSAGE, treeName, this.format);
+      context().newIssue(MessageNameCheck.KEY, message).tree(tree);
     }
   }
+
 }
