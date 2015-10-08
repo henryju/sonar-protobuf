@@ -77,7 +77,7 @@ public abstract class ProtoBufVisitorCheck implements VisitorCheck {
   }
 
   @Override
-  public final List<Issue> analyze(File file, ProtoBufUnitTree tree) {
+  public List<Issue> analyze(File file, ProtoBufUnitTree tree) {
     this.context = new ProtoBufCheckContext(file, tree);
     visitProtoBufUnit(tree);
 
