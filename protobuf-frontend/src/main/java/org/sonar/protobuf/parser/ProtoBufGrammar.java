@@ -25,8 +25,9 @@ import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree.Kind;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.protobuf.api.ProtoBufKeyword;
 import org.sonar.protobuf.api.ProtoBufPunctuator;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
@@ -69,7 +70,8 @@ public class ProtoBufGrammar {
   public FieldTree FIELD() {
     return b.<FieldTree>nonterminal(ProtoBufLexicalGrammar.FIELD).is(
       f.field(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
-        BASIC_TYPE(),
+        b.optional(FIELD_RULE()),
+        FIELD_SCALAR_TYPE(),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.EQU),
         b.token(ProtoBufLexicalGrammar.INTEGER_LITERAL),
@@ -81,10 +83,10 @@ public class ProtoBufGrammar {
       f.identifier(b.token(ProtoBufLexicalGrammar.IDENTIFIER)));
   }
 
-  public PrimitiveTypeTree BASIC_TYPE() {
-    return b.<PrimitiveTypeTree>nonterminal(ProtoBufLexicalGrammar.BASIC_TYPE)
+  public FieldScalarTypeTree FIELD_SCALAR_TYPE() {
+    return b.<FieldScalarTypeTree>nonterminal(ProtoBufLexicalGrammar.FIELD_SCALAR_TYPE)
       .is(
-        f.newBasicType(
+        f.fieldScalarType(
           b.firstOf(
             b.token(ProtoBufKeyword.DOUBLE),
             b.token(ProtoBufKeyword.FLOAT),
@@ -101,6 +103,16 @@ public class ProtoBufGrammar {
             b.token(ProtoBufKeyword.BOOL),
             b.token(ProtoBufKeyword.STRING),
             b.token(ProtoBufKeyword.BYTES))));
+  }
+
+  public FieldRuleTree FIELD_RULE() {
+    return b.<FieldRuleTree>nonterminal(ProtoBufLexicalGrammar.FIELD_RULE)
+      .is(
+        f.fieldRule(
+          b.firstOf(
+            b.token(ProtoBufKeyword.REQUIRED),
+            b.token(ProtoBufKeyword.OPTIONAL),
+            b.token(ProtoBufKeyword.REPEATED))));
   }
 
 }

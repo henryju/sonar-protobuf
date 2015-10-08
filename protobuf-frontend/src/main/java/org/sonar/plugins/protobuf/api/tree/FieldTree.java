@@ -19,7 +19,13 @@
  */
 package org.sonar.plugins.protobuf.api.tree;
 
+import javax.annotation.CheckForNull;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
+
 public interface FieldTree extends Tree {
+
+  @CheckForNull
+  FieldRuleTree rule();
 
   String name();
 

@@ -52,8 +52,8 @@ public enum ProtoBufLexicalGrammar implements GrammarRuleKey {
   MESSAGE,
 
   FIELD,
-
-  BASIC_TYPE;
+  FIELD_RULE,
+  FIELD_SCALAR_TYPE;
 
   public static LexerlessGrammar createGrammar() {
     return createGrammarBuilder().build();

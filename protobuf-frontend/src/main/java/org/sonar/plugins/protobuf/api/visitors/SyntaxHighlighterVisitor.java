@@ -1,6 +1,6 @@
 /*
- * SonarQube Java
- * Copyright (C) 2012 SonarSource
+ * SonarQube Protocol Buffers Plugin
+ * Copyright (C) 2015 SonarSource
  * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or

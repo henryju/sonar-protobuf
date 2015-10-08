@@ -27,14 +27,16 @@ import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.protobuf.tree.impl.FieldTreeImpl;
 import org.sonar.protobuf.tree.impl.MessageTreeImpl;
 import org.sonar.protobuf.tree.impl.ProtoBufUnitTreeImpl;
 import org.sonar.protobuf.tree.impl.SyntaxTreeImpl;
+import org.sonar.protobuf.tree.impl.expression.FieldRuleTreeImpl;
+import org.sonar.protobuf.tree.impl.expression.FieldScalarTypeTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.IdentifierTreeImpl;
-import org.sonar.protobuf.tree.impl.expression.PrimitiveTypeTreeImpl;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
 public class TreeFactory {
@@ -56,13 +58,18 @@ public class TreeFactory {
     return new SyntaxTreeImpl(token, eq, value, colon);
   }
 
-  public PrimitiveTypeTree newBasicType(InternalSyntaxToken token) {
-    return new PrimitiveTypeTreeImpl(token);
+  public FieldScalarTypeTree fieldScalarType(InternalSyntaxToken token) {
+    return new FieldScalarTypeTreeImpl(token);
   }
 
-  public FieldTree field(Optional<InternalSyntaxToken> spacing, PrimitiveTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag,
+  public FieldTree field(Optional<InternalSyntaxToken> spacing, Optional<FieldRuleTree> rule, FieldScalarTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq,
+    InternalSyntaxToken tag,
     InternalSyntaxToken colon) {
-    return new FieldTreeImpl(type, identifier, eq, tag, colon);
+    return new FieldTreeImpl(rule.orNull(), type, identifier, eq, tag, colon);
+  }
+
+  public FieldRuleTree fieldRule(InternalSyntaxToken token) {
+    return new FieldRuleTreeImpl(token);
   }
 
   private static <T extends Tree> List<T> optionalList(Optional<List<T>> list) {

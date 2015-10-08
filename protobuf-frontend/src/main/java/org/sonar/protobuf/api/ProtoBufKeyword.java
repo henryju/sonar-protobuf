@@ -29,6 +29,10 @@ public enum ProtoBufKeyword implements TokenType,GrammarRuleKey {
   MESSAGE("message"),
   SERVICE("service"),
 
+  REQUIRED("required"),
+  OPTIONAL("optional"),
+  REPEATED("repeated"),
+
   DOUBLE("double"),
   FLOAT("float"),
   INT32("int32"),

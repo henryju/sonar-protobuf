@@ -21,8 +21,9 @@ package org.sonar.plugins.protobuf.api.tree;
 
 import com.google.common.annotations.Beta;
 import com.sonar.sslr.api.AstNodeType;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
@@ -63,9 +64,14 @@ public interface Tree {
     FIELD(FieldTree.class),
 
     /**
-     * {@link PrimitiveTypeTree}
+     * {@link FieldRuleTree}
      */
-    PRIMITIVE_TYPE(PrimitiveTypeTree.class),
+    FIELD_RULE(FieldRuleTree.class),
+
+    /**
+     * {@link FieldScalarTypeTree}
+     */
+    FIELD_SCALAR_TYPE(FieldScalarTypeTree.class),
 
     /**
      * {@link IdentifierTree}

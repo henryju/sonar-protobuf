@@ -27,8 +27,9 @@ import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
+import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.protobuf.tree.impl.ProtoBufTree;
@@ -74,12 +75,17 @@ public abstract class ProtoBufVisitorCheck implements VisitorCheck {
   }
 
   @Override
-  public void visitPrimitiveType(PrimitiveTypeTree tree) {
+  public void visitFieldScalarType(FieldScalarTypeTree tree) {
     scan(tree);
   }
 
   @Override
   public void visitSyntax(SyntaxTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitFieldRule(FieldRuleTree tree) {
     scan(tree);
   }
 

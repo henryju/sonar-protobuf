@@ -1,6 +1,6 @@
 /*
- * SonarQube Java
- * Copyright (C) 2012 SonarSource
+ * SonarQube Protocol Buffers Plugin
+ * Copyright (C) 2015 SonarSource
  * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ import com.google.common.annotations.Beta;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
 @Beta
-public interface PrimitiveTypeTree extends ExpressionTree {
+public interface FieldScalarTypeTree extends ExpressionTree {
 
   SyntaxToken keyword();
 

@@ -17,61 +17,43 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.protobuf.tree.impl;
+package org.sonar.protobuf.tree.impl.expression;
 
 import com.google.common.collect.Iterators;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
-import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
 import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
+import org.sonar.protobuf.tree.impl.ProtoBufTree;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
-public class FieldTreeImpl extends ProtoBufTree implements FieldTree {
+public class FieldScalarTypeTreeImpl extends ProtoBufTree implements FieldScalarTypeTree {
 
-  private static final Kind KIND = Kind.FIELD;
-  private final FieldScalarTypeTree type;
-  private final IdentifierTree identifier;
-  private final InternalSyntaxToken eq;
-  private final InternalSyntaxToken tag;
-  private final InternalSyntaxToken colon;
-  private final FieldRuleTree rule;
+  private final InternalSyntaxToken token;
 
-  public FieldTreeImpl(@Nullable FieldRuleTree rule, FieldScalarTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag,
-    InternalSyntaxToken colon) {
-    this.rule = rule;
-    this.type = type;
-    this.identifier = identifier;
-    this.eq = eq;
-    this.tag = tag;
-    this.colon = colon;
-  }
-
-  @Override
-  public String name() {
-    return this.identifier.text();
-  }
-
-  @Override
-  public FieldRuleTree rule() {
-    return rule;
+  public FieldScalarTypeTreeImpl(InternalSyntaxToken token) {
+    this.token = token;
   }
 
   @Override
   public Kind getKind() {
-    return KIND;
-  }
-
-  @Override
-  public Iterator<Tree> childrenIterator() {
-    return Iterators.<Tree>forArray(rule, type, identifier, eq, tag, colon);
+    return Kind.FIELD_SCALAR_TYPE;
   }
 
   @Override
   public void accept(VisitorCheck visitor) {
-    visitor.visitField(this);
+    visitor.visitFieldScalarType(this);
   }
+
+  @Override
+  public SyntaxToken keyword() {
+    return token;
+  }
+
+  @Override
+  public Iterator<Tree> childrenIterator() {
+    return Iterators.<Tree>singletonIterator(token);
+  }
+
 }

@@ -23,10 +23,8 @@ import com.google.common.annotations.Beta;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
 @Beta
-public interface LiteralTree extends ExpressionTree {
+public interface FieldRuleTree extends ExpressionTree {
 
-  SyntaxToken token();
-
-  String value();
+  SyntaxToken keyword();
 
 }
