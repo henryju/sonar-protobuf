@@ -20,11 +20,8 @@
 package org.sonar.plugins.protobuf.api.tree.expression;
 
 import com.google.common.annotations.Beta;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
 @Beta
-public interface FieldScalarTypeTree extends ExpressionTree {
-
-  SyntaxToken keyword();
+public interface FieldScalarTypeTree extends IdentifierTree {
 
 }

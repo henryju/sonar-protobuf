@@ -31,6 +31,7 @@ public class FieldTest {
   public void ok() {
     Assertions.assertThat(ProtoBufLexicalGrammar.FIELD)
       .matches("int32 bla = 1;")
+      .matches("Another bla = 1;")
       .matches("required int32 bla = 1;")
       .matches("repeated int32 bla = 1;")
       .matches("optional int32 bla = 1;");

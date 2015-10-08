@@ -62,7 +62,7 @@ public class TreeFactory {
     return new FieldScalarTypeTreeImpl(token);
   }
 
-  public FieldTree field(Optional<InternalSyntaxToken> spacing, Optional<FieldRuleTree> rule, FieldScalarTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq,
+  public FieldTree field(Optional<InternalSyntaxToken> spacing, Optional<FieldRuleTree> rule, IdentifierTree type, IdentifierTree identifier, InternalSyntaxToken eq,
     InternalSyntaxToken tag,
     InternalSyntaxToken colon) {
     return new FieldTreeImpl(rule.orNull(), type, identifier, eq, tag, colon);

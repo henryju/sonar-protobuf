@@ -25,7 +25,6 @@ import javax.annotation.Nullable;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
-import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
@@ -33,14 +32,14 @@ import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 public class FieldTreeImpl extends ProtoBufTree implements FieldTree {
 
   private static final Kind KIND = Kind.FIELD;
-  private final FieldScalarTypeTree type;
+  private final IdentifierTree type;
   private final IdentifierTree identifier;
   private final InternalSyntaxToken eq;
   private final InternalSyntaxToken tag;
   private final InternalSyntaxToken colon;
   private final FieldRuleTree rule;
 
-  public FieldTreeImpl(@Nullable FieldRuleTree rule, FieldScalarTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag,
+  public FieldTreeImpl(@Nullable FieldRuleTree rule, IdentifierTree type, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag,
     InternalSyntaxToken colon) {
     this.rule = rule;
     this.type = type;
@@ -58,6 +57,16 @@ public class FieldTreeImpl extends ProtoBufTree implements FieldTree {
   @Override
   public FieldRuleTree rule() {
     return rule;
+  }
+
+  @Override
+  public String type() {
+    return type.text();
+  }
+
+  @Override
+  public boolean isScalar() {
+    return type.is(Kind.FIELD_SCALAR_TYPE);
   }
 
   @Override

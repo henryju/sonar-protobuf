@@ -70,7 +70,7 @@ public class ProtoBufGrammar {
     return b.<FieldTree>nonterminal(ProtoBufLexicalGrammar.FIELD).is(
       f.field(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
         b.optional(FIELD_RULE()),
-        FIELD_SCALAR_TYPE(),
+        b.firstOf(FIELD_SCALAR_TYPE(), IDENTIFIER()),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.EQU),
         b.token(ProtoBufLexicalGrammar.INTEGER_LITERAL),

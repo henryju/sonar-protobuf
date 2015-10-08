@@ -47,8 +47,13 @@ public class FieldScalarTypeTreeImpl extends ProtoBufTree implements FieldScalar
   }
 
   @Override
-  public SyntaxToken keyword() {
+  public SyntaxToken token() {
     return token;
+  }
+
+  @Override
+  public String text() {
+    return token.text();
   }
 
   @Override

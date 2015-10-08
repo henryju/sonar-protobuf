@@ -29,4 +29,8 @@ public interface FieldTree extends Tree {
 
   String name();
 
+  String type();
+
+  boolean isScalar();
+
 }
