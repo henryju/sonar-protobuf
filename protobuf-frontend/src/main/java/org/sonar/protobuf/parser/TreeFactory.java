@@ -22,15 +22,19 @@ package org.sonar.protobuf.parser;
 import com.sonar.sslr.api.typed.Optional;
 import java.util.Collections;
 import java.util.List;
+import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
+import org.sonar.protobuf.tree.impl.FieldTreeImpl;
 import org.sonar.protobuf.tree.impl.MessageTreeImpl;
 import org.sonar.protobuf.tree.impl.ProtoBufUnitTreeImpl;
 import org.sonar.protobuf.tree.impl.SyntaxTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.IdentifierTreeImpl;
+import org.sonar.protobuf.tree.impl.expression.PrimitiveTypeTreeImpl;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
 public class TreeFactory {
@@ -40,8 +44,8 @@ public class TreeFactory {
   }
 
   public MessageTree message(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
-    InternalSyntaxToken rcurlyToken) {
-    return new MessageTreeImpl(messageToken, name, lcurlyToken, rcurlyToken);
+    Optional<List<FieldTree>> fields, InternalSyntaxToken rcurlyToken) {
+    return new MessageTreeImpl(messageToken, name, lcurlyToken, optionalList(fields), rcurlyToken);
   }
 
   public IdentifierTree identifier(InternalSyntaxToken token) {
@@ -50,6 +54,15 @@ public class TreeFactory {
 
   public SyntaxTree syntax(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken token, InternalSyntaxToken eq, InternalSyntaxToken value, InternalSyntaxToken colon) {
     return new SyntaxTreeImpl(token, eq, value, colon);
+  }
+
+  public PrimitiveTypeTree newBasicType(InternalSyntaxToken token) {
+    return new PrimitiveTypeTreeImpl(token);
+  }
+
+  public FieldTree field(Optional<InternalSyntaxToken> spacing, PrimitiveTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag,
+    InternalSyntaxToken colon) {
+    return new FieldTreeImpl(type, identifier, eq, tag, colon);
   }
 
   private static <T extends Tree> List<T> optionalList(Optional<List<T>> list) {

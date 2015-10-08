@@ -27,11 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.plugins.protobuf.api.visitors.Issue;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufCheck;
@@ -149,18 +146,6 @@ public class ProtoBufCheckTest {
       } else if (text.startsWith("// NOK")) {
         context().newIssue("testKey", null).line(syntaxTrivia.line());
       }
-    }
-
-    @Override
-    public void visitMessage(MessageTree message) {
-    }
-
-    @Override
-    public void visitIdentifier(IdentifierTree identifier) {
-    }
-
-    @Override
-    public void visitSyntax(SyntaxTree syntaxTree) {
     }
 
   }

@@ -22,8 +22,13 @@ package org.sonar.plugins.protobuf.api.visitors;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import org.sonar.plugins.protobuf.api.tree.FieldTree;
+import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
+import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.protobuf.tree.impl.ProtoBufTree;
@@ -50,6 +55,31 @@ public abstract class ProtoBufVisitorCheck implements VisitorCheck {
 
   @Override
   public void visitProtoBufUnit(ProtoBufUnitTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitField(FieldTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitMessage(MessageTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitIdentifier(IdentifierTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitPrimitiveType(PrimitiveTypeTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitSyntax(SyntaxTree tree) {
     scan(tree);
   }
 

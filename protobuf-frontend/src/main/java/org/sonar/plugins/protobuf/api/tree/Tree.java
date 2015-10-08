@@ -22,6 +22,7 @@ package org.sonar.plugins.protobuf.api.tree;
 import com.google.common.annotations.Beta;
 import com.sonar.sslr.api.AstNodeType;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
@@ -55,6 +56,16 @@ public interface Tree {
      * {@link MessageTree}
      */
     MESSAGE(MessageTree.class),
+
+    /**
+     * {@link FieldTree}
+     */
+    FIELD(FieldTree.class),
+
+    /**
+     * {@link PrimitiveTypeTree}
+     */
+    PRIMITIVE_TYPE(PrimitiveTypeTree.class),
 
     /**
      * {@link IdentifierTree}

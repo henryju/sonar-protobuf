@@ -20,11 +20,13 @@
 package org.sonar.protobuf.parser;
 
 import com.sonar.sslr.api.typed.GrammarBuilder;
+import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree.Kind;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.protobuf.api.ProtoBufKeyword;
 import org.sonar.protobuf.api.ProtoBufPunctuator;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
@@ -60,12 +62,45 @@ public class ProtoBufGrammar {
         b.token(ProtoBufKeyword.MESSAGE),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.LCURLYBRACE),
+        b.zeroOrMore(FIELD()),
         b.token(ProtoBufPunctuator.RCURLYBRACE)));
+  }
+
+  public FieldTree FIELD() {
+    return b.<FieldTree>nonterminal(ProtoBufLexicalGrammar.FIELD).is(
+      f.field(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
+        BASIC_TYPE(),
+        IDENTIFIER(),
+        b.token(ProtoBufPunctuator.EQU),
+        b.token(ProtoBufLexicalGrammar.INTEGER_LITERAL),
+        b.token(ProtoBufPunctuator.SEMICOLON)));
   }
 
   public IdentifierTree IDENTIFIER() {
     return b.<IdentifierTree>nonterminal(Kind.IDENTIFIER).is(
       f.identifier(b.token(ProtoBufLexicalGrammar.IDENTIFIER)));
+  }
+
+  public PrimitiveTypeTree BASIC_TYPE() {
+    return b.<PrimitiveTypeTree>nonterminal(ProtoBufLexicalGrammar.BASIC_TYPE)
+      .is(
+        f.newBasicType(
+          b.firstOf(
+            b.token(ProtoBufKeyword.DOUBLE),
+            b.token(ProtoBufKeyword.FLOAT),
+            b.token(ProtoBufKeyword.INT32),
+            b.token(ProtoBufKeyword.INT64),
+            b.token(ProtoBufKeyword.UINT32),
+            b.token(ProtoBufKeyword.UINT64),
+            b.token(ProtoBufKeyword.SINT32),
+            b.token(ProtoBufKeyword.SINT64),
+            b.token(ProtoBufKeyword.FIXED32),
+            b.token(ProtoBufKeyword.FIXED64),
+            b.token(ProtoBufKeyword.SFIXED32),
+            b.token(ProtoBufKeyword.SFIXED64),
+            b.token(ProtoBufKeyword.BOOL),
+            b.token(ProtoBufKeyword.STRING),
+            b.token(ProtoBufKeyword.BYTES))));
   }
 
 }

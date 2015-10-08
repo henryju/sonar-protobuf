@@ -49,7 +49,11 @@ public enum ProtoBufLexicalGrammar implements GrammarRuleKey {
 
   SYNTAX,
 
-  MESSAGE;
+  MESSAGE,
+
+  FIELD,
+
+  BASIC_TYPE;
 
   public static LexerlessGrammar createGrammar() {
     return createGrammarBuilder().build();

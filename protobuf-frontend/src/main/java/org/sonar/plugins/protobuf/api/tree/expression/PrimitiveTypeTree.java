@@ -1,6 +1,6 @@
 /*
- * SonarQube Protocol Buffers Plugin
- * Copyright (C) 2015 SonarSource
+ * SonarQube Java
+ * Copyright (C) 2012 SonarSource
  * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
@@ -17,14 +17,14 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.tree;
+package org.sonar.plugins.protobuf.api.tree.expression;
 
-import java.util.List;
+import com.google.common.annotations.Beta;
+import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
-public interface MessageTree extends Tree {
+@Beta
+public interface PrimitiveTypeTree extends ExpressionTree {
 
-  String name();
-
-  List<FieldTree> fields();
+  SyntaxToken keyword();
 
 }

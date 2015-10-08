@@ -32,7 +32,8 @@ public class MessageTest {
     Assertions.assertThat(ProtoBufLexicalGrammar.MESSAGE)
       .matches("message Foo { \n }")
       .matches("# Some comment\nmessage Foo { \n }")
-      .matches("message Foo { }");
+      .matches("message Foo { }")
+      .matches("message Foo { int32 foo =1; }");
   }
 
 }

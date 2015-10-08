@@ -17,14 +17,20 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.tree;
+package org.sonar.protobuf.parser;
 
-import java.util.List;
+import com.sonar.sslr.api.Grammar;
+import org.junit.Test;
+import org.sonar.protobuf.utils.Assertions;
 
-public interface MessageTree extends Tree {
+public class FieldTest {
 
-  String name();
+  Grammar g = ProtoBufLexicalGrammar.createGrammarBuilder().build();
 
-  List<FieldTree> fields();
+  @Test
+  public void ok() {
+    Assertions.assertThat(ProtoBufLexicalGrammar.FIELD)
+      .matches("int32 bla = 1;");
+  }
 
 }

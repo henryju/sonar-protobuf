@@ -19,12 +19,8 @@
  */
 package org.sonar.plugins.protobuf.api.tree;
 
-import java.util.List;
-
-public interface MessageTree extends Tree {
+public interface FieldTree extends Tree {
 
   String name();
-
-  List<FieldTree> fields();
 
 }

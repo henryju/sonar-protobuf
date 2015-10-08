@@ -21,40 +21,33 @@ package org.sonar.protobuf.tree.impl;
 
 import com.google.common.collect.Iterators;
 import java.util.Iterator;
-import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.plugins.protobuf.api.tree.expression.PrimitiveTypeTree;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
-public class MessageTreeImpl extends ProtoBufTree implements MessageTree {
+public class FieldTreeImpl extends ProtoBufTree implements FieldTree {
 
-  private static final Kind KIND = Kind.MESSAGE;
-  private final InternalSyntaxToken messageToken;
-  private final IdentifierTree name;
-  private final InternalSyntaxToken lcurlyToken;
-  private final InternalSyntaxToken rcurlyToken;
-  private final List<FieldTree> fields;
+  private static final Kind KIND = Kind.FIELD;
+  private final PrimitiveTypeTree type;
+  private final IdentifierTree identifier;
+  private final InternalSyntaxToken eq;
+  private final InternalSyntaxToken tag;
+  private final InternalSyntaxToken colon;
 
-  public MessageTreeImpl(InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
-    List<FieldTree> fields, InternalSyntaxToken rcurlyToken) {
-    this.messageToken = messageToken;
-    this.name = name;
-    this.lcurlyToken = lcurlyToken;
-    this.fields = fields;
-    this.rcurlyToken = rcurlyToken;
+  public FieldTreeImpl(PrimitiveTypeTree type, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag, InternalSyntaxToken colon) {
+    this.type = type;
+    this.identifier = identifier;
+    this.eq = eq;
+    this.tag = tag;
+    this.colon = colon;
   }
 
   @Override
   public String name() {
-    return this.name.text();
-  }
-
-  @Override
-  public List<FieldTree> fields() {
-    return fields;
+    return this.identifier.text();
   }
 
   @Override
@@ -64,13 +57,11 @@ public class MessageTreeImpl extends ProtoBufTree implements MessageTree {
 
   @Override
   public Iterator<Tree> childrenIterator() {
-    return Iterators.concat(Iterators.<Tree>forArray(messageToken, name, lcurlyToken),
-      fields.iterator(),
-      Iterators.singletonIterator(rcurlyToken));
+    return Iterators.<Tree>forArray(type, identifier, eq, tag, colon);
   }
 
   @Override
   public void accept(VisitorCheck visitor) {
-    visitor.visitMessage(this);
+    visitor.visitField(this);
   }
 }
