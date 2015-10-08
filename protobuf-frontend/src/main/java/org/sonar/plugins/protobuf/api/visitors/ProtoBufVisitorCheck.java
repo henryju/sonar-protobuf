@@ -22,6 +22,8 @@ package org.sonar.plugins.protobuf.api.visitors;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import org.sonar.plugins.protobuf.api.tree.EnumTree;
+import org.sonar.plugins.protobuf.api.tree.EnumValueTree;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
@@ -92,6 +94,16 @@ public abstract class ProtoBufVisitorCheck implements VisitorCheck {
 
   @Override
   public void visitFieldRule(FieldRuleTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitEnum(EnumTree tree) {
+    scan(tree);
+  }
+
+  @Override
+  public void visitEnumValue(EnumValueTree tree) {
     scan(tree);
   }
 

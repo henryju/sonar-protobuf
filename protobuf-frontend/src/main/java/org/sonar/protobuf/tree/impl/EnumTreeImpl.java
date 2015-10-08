@@ -22,38 +22,44 @@ package org.sonar.protobuf.tree.impl;
 import com.google.common.collect.Iterators;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
-import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
+import org.sonar.plugins.protobuf.api.tree.EnumTree;
+import org.sonar.plugins.protobuf.api.tree.EnumValueTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
+import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
-public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTree {
+public class EnumTreeImpl extends ProtoBufTree implements EnumTree {
 
-  private static final Kind KIND = Kind.PROTO_UNIT;
+  private static final Kind KIND = Kind.ENUM;
+  private final InternalSyntaxToken enumToken;
+  private final IdentifierTree name;
+  private final InternalSyntaxToken lcurlyToken;
+  private final InternalSyntaxToken rcurlyToken;
+  private final List<EnumValueTree> values;
 
-  private final InternalSyntaxToken eofToken;
-  private final List<Tree> messageOrEnum;
-  private final SyntaxTree syntaxTree;
-
-  public ProtoBufUnitTreeImpl(@Nullable SyntaxTree syntaxTree, List<Tree> messageOrEnum, InternalSyntaxToken eofToken) {
-    this.syntaxTree = syntaxTree;
-    this.messageOrEnum = messageOrEnum;
-    this.eofToken = eofToken;
-  }
-
-  @CheckForNull
-  @Override
-  public SyntaxTree syntax() {
-    return syntaxTree;
+  public EnumTreeImpl(InternalSyntaxToken enumToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
+    List<EnumValueTree> values, InternalSyntaxToken rcurlyToken) {
+    this.enumToken = enumToken;
+    this.name = name;
+    this.lcurlyToken = lcurlyToken;
+    this.values = values;
+    this.rcurlyToken = rcurlyToken;
   }
 
   @Override
-  public SyntaxToken eofToken() {
-    return eofToken;
+  public String name() {
+    return this.name.text();
+  }
+
+  @Override
+  public IdentifierTree identifier() {
+    return this.name;
+  }
+
+  @Override
+  public List<EnumValueTree> values() {
+    return values;
   }
 
   @Override
@@ -63,14 +69,13 @@ public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTr
 
   @Override
   public Iterator<Tree> childrenIterator() {
-    return Iterators.concat(
-      Iterators.singletonIterator(syntaxTree),
-      messageOrEnum.iterator(),
-      Iterators.singletonIterator(eofToken));
+    return Iterators.concat(Iterators.<Tree>forArray(enumToken, name, lcurlyToken),
+      values.iterator(),
+      Iterators.singletonIterator(rcurlyToken));
   }
 
   @Override
   public void accept(VisitorCheck visitor) {
-    visitor.visitProtoBufUnit(this);
+    visitor.visitEnum(this);
   }
 }

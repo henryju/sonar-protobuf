@@ -59,6 +59,16 @@ public interface Tree {
     MESSAGE(MessageTree.class),
 
     /**
+     * {@link EnumTree}
+     */
+    ENUM(EnumTree.class),
+
+    /**
+     * {@link EnumValueTree}
+     */
+    ENUM_VALUE(EnumValueTree.class),
+
+    /**
      * {@link FieldTree}
      */
     FIELD(FieldTree.class),

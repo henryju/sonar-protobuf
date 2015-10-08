@@ -19,12 +19,8 @@
  */
 package org.sonar.plugins.protobuf.api.tree;
 
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
-
-public interface MessageTree extends Tree {
+public interface EnumValueTree extends Tree {
 
   String name();
-
-  IdentifierTree identifier();
 
 }

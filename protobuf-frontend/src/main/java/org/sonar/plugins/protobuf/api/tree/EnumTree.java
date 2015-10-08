@@ -19,12 +19,15 @@
  */
 package org.sonar.plugins.protobuf.api.tree;
 
+import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 
-public interface MessageTree extends Tree {
+public interface EnumTree extends Tree {
 
   String name();
 
   IdentifierTree identifier();
+
+  List<EnumValueTree> values();
 
 }

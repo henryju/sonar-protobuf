@@ -22,6 +22,8 @@ package org.sonar.protobuf.parser;
 import com.sonar.sslr.api.typed.Optional;
 import java.util.Collections;
 import java.util.List;
+import org.sonar.plugins.protobuf.api.tree.EnumTree;
+import org.sonar.plugins.protobuf.api.tree.EnumValueTree;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
@@ -31,10 +33,12 @@ import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
 import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import org.sonar.protobuf.tree.impl.EnumTreeImpl;
 import org.sonar.protobuf.tree.impl.FieldTreeImpl;
 import org.sonar.protobuf.tree.impl.MessageTreeImpl;
 import org.sonar.protobuf.tree.impl.ProtoBufUnitTreeImpl;
 import org.sonar.protobuf.tree.impl.SyntaxTreeImpl;
+import org.sonar.protobuf.tree.impl.expression.EnumValueTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.FieldRuleTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.FieldScalarTypeTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.FieldTypeTreeImpl;
@@ -43,13 +47,13 @@ import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
 public class TreeFactory {
 
-  public ProtoBufUnitTree protoBufUnit(Optional<SyntaxTree> syntaxTree, Optional<List<MessageTree>> messages, Optional<InternalSyntaxToken> spacing, InternalSyntaxToken eofToken) {
-    return new ProtoBufUnitTreeImpl(syntaxTree.orNull(), optionalList(messages), eofToken);
+  public ProtoBufUnitTree protoBufUnit(Optional<SyntaxTree> syntaxTree, Optional<List<Tree>> messageOrEnum, Optional<InternalSyntaxToken> spacing, InternalSyntaxToken eofToken) {
+    return new ProtoBufUnitTreeImpl(syntaxTree.orNull(), optionalList(messageOrEnum), eofToken);
   }
 
   public MessageTree message(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
-    Optional<List<Tree>> fieldOrMessage, InternalSyntaxToken rcurlyToken) {
-    return new MessageTreeImpl(messageToken, name, lcurlyToken, optionalList(fieldOrMessage), rcurlyToken);
+    Optional<List<Tree>> fieldOrMessageOrEnum, InternalSyntaxToken rcurlyToken) {
+    return new MessageTreeImpl(messageToken, name, lcurlyToken, optionalList(fieldOrMessageOrEnum), rcurlyToken);
   }
 
   public IdentifierTree identifier(InternalSyntaxToken token) {
@@ -76,6 +80,16 @@ public class TreeFactory {
 
   public FieldTypeTree fieldType(IdentifierTree identifier) {
     return new FieldTypeTreeImpl(identifier);
+  }
+
+  public EnumValueTree enumValue(Optional<InternalSyntaxToken> spacing, IdentifierTree identifier, InternalSyntaxToken eq, InternalSyntaxToken tag,
+    InternalSyntaxToken colon) {
+    return new EnumValueTreeImpl(identifier, eq, tag, colon);
+  }
+
+  public EnumTree newEnum(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken keyword, IdentifierTree identifier, InternalSyntaxToken lcurly,
+    Optional<List<EnumValueTree>> values, InternalSyntaxToken rcurly) {
+    return new EnumTreeImpl(keyword, identifier, lcurly, optionalList(values), rcurly);
   }
 
   private static <T extends Tree> List<T> optionalList(Optional<List<T>> list) {

@@ -17,14 +17,24 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.protobuf.api.tree;
+package org.sonar.protobuf.parser;
 
-import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
+import com.sonar.sslr.api.Grammar;
+import org.junit.Test;
+import org.sonar.protobuf.utils.Assertions;
 
-public interface MessageTree extends Tree {
+public class EnumTest {
 
-  String name();
+  Grammar g = ProtoBufLexicalGrammar.createGrammarBuilder().build();
 
-  IdentifierTree identifier();
+  @Test
+  public void ok() {
+    Assertions.assertThat(ProtoBufLexicalGrammar.ENUM)
+      .matches("enum Foo { \n }")
+      .matches("# Some comment\nenum Foo { \n }")
+      .matches("enum Foo { }")
+      .matches("enum Foo {\n A = 1; }")
+      .matches("enum Foo {\n A = 1; \n B = 2; }");
+  }
 
 }

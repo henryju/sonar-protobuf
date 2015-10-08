@@ -34,6 +34,7 @@ public class MessageTest {
       .matches("# Some comment\nmessage Foo { \n }")
       .matches("message Foo { }")
       .matches("message Foo {\n message Bar {} }")
+      .matches("message Foo {\n enum Bar {} }")
       .matches("message Foo { int32 foo =1; }")
       .matches("message Foo { int32 foo =1; }");
   }

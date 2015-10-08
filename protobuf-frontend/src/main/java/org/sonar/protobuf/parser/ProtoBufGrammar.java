@@ -20,6 +20,8 @@
 package org.sonar.protobuf.parser;
 
 import com.sonar.sslr.api.typed.GrammarBuilder;
+import org.sonar.plugins.protobuf.api.tree.EnumTree;
+import org.sonar.plugins.protobuf.api.tree.EnumValueTree;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.FieldTypeTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
@@ -44,7 +46,7 @@ public class ProtoBufGrammar {
 
   public ProtoBufUnitTree PROTOBUF_UNIT() {
     return b.<ProtoBufUnitTree>nonterminal(ProtoBufLexicalGrammar.PROTOBUF_UNIT).is(
-      f.protoBufUnit(b.optional(SYNTAX()), b.zeroOrMore(MESSAGE()),
+      f.protoBufUnit(b.optional(SYNTAX()), b.zeroOrMore(b.firstOf(MESSAGE(), ENUM())),
         b.optional(b.token(ProtoBufLexicalGrammar.SPACING)), b.token(ProtoBufLexicalGrammar.EOF)));
   }
 
@@ -63,8 +65,27 @@ public class ProtoBufGrammar {
         b.token(ProtoBufKeyword.MESSAGE),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.LCURLYBRACE),
-        b.zeroOrMore(b.firstOf(FIELD(), MESSAGE())),
+        b.zeroOrMore(b.firstOf(FIELD(), MESSAGE(), ENUM())),
         b.token(ProtoBufPunctuator.RCURLYBRACE)));
+  }
+
+  public EnumTree ENUM() {
+    return b.<EnumTree>nonterminal(ProtoBufLexicalGrammar.ENUM).is(
+      f.newEnum(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
+        b.token(ProtoBufKeyword.ENUM),
+        IDENTIFIER(),
+        b.token(ProtoBufPunctuator.LCURLYBRACE),
+        b.zeroOrMore(ENUM_VALUE()),
+        b.token(ProtoBufPunctuator.RCURLYBRACE)));
+  }
+
+  public EnumValueTree ENUM_VALUE() {
+    return b.<EnumValueTree>nonterminal(ProtoBufLexicalGrammar.ENUM_VALUE).is(
+      f.enumValue(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
+        IDENTIFIER(),
+        b.token(ProtoBufPunctuator.EQU),
+        b.token(ProtoBufLexicalGrammar.INTEGER_LITERAL),
+        b.token(ProtoBufPunctuator.SEMICOLON)));
   }
 
   public FieldTree FIELD() {

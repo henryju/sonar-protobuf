@@ -27,6 +27,7 @@ public enum ProtoBufKeyword implements TokenType,GrammarRuleKey {
 
   SYNTAX("syntax"),
   MESSAGE("message"),
+  ENUM("enum"),
   SERVICE("service"),
 
   REQUIRED("required"),
