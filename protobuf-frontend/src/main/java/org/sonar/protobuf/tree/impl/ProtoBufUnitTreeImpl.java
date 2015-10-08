@@ -22,6 +22,8 @@ package org.sonar.protobuf.tree.impl;
 import com.google.common.collect.Iterators;
 import java.util.Iterator;
 import java.util.List;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
@@ -38,7 +40,7 @@ public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTr
   private final List<MessageTree> messages;
   private final SyntaxTree syntaxTree;
 
-  public ProtoBufUnitTreeImpl(SyntaxTree syntaxTree, List<MessageTree> messages, InternalSyntaxToken eofToken) {
+  public ProtoBufUnitTreeImpl(@Nullable SyntaxTree syntaxTree, List<MessageTree> messages, InternalSyntaxToken eofToken) {
     this.syntaxTree = syntaxTree;
     this.messages = messages;
     this.eofToken = eofToken;
@@ -48,6 +50,7 @@ public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTr
     return messages;
   }
 
+  @CheckForNull
   @Override
   public SyntaxTree syntax() {
     return syntaxTree;

@@ -35,11 +35,12 @@ import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
 public class TreeFactory {
 
-  public ProtoBufUnitTree protoBufUnit(SyntaxTree syntaxTree, Optional<List<MessageTree>> messages, Optional<InternalSyntaxToken> spacing, InternalSyntaxToken eofToken) {
-    return new ProtoBufUnitTreeImpl(syntaxTree, optionalList(messages), eofToken);
+  public ProtoBufUnitTree protoBufUnit(Optional<SyntaxTree> syntaxTree, Optional<List<MessageTree>> messages, Optional<InternalSyntaxToken> spacing, InternalSyntaxToken eofToken) {
+    return new ProtoBufUnitTreeImpl(syntaxTree.orNull(), optionalList(messages), eofToken);
   }
 
-  public MessageTree message(InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken, InternalSyntaxToken rcurlyToken) {
+  public MessageTree message(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
+    InternalSyntaxToken rcurlyToken) {
     return new MessageTreeImpl(messageToken, name, lcurlyToken, rcurlyToken);
   }
 
@@ -47,7 +48,7 @@ public class TreeFactory {
     return new IdentifierTreeImpl(token);
   }
 
-  public SyntaxTree syntax(InternalSyntaxToken token, InternalSyntaxToken eq, InternalSyntaxToken value, InternalSyntaxToken colon) {
+  public SyntaxTree syntax(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken token, InternalSyntaxToken eq, InternalSyntaxToken value, InternalSyntaxToken colon) {
     return new SyntaxTreeImpl(token, eq, value, colon);
   }
 

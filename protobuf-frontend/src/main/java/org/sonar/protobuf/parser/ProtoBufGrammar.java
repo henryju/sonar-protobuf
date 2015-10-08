@@ -41,12 +41,14 @@ public class ProtoBufGrammar {
 
   public ProtoBufUnitTree PROTOBUF_UNIT() {
     return b.<ProtoBufUnitTree>nonterminal(ProtoBufLexicalGrammar.PROTOBUF_UNIT).is(
-      f.protoBufUnit(SYNTAX(), b.zeroOrMore(MESSAGE()), b.optional(b.token(ProtoBufLexicalGrammar.SPACING)), b.token(ProtoBufLexicalGrammar.EOF)));
+      f.protoBufUnit(b.optional(SYNTAX()), b.zeroOrMore(MESSAGE()),
+        b.optional(b.token(ProtoBufLexicalGrammar.SPACING)), b.token(ProtoBufLexicalGrammar.EOF)));
   }
 
   public SyntaxTree SYNTAX() {
     return b.<SyntaxTree>nonterminal(ProtoBufLexicalGrammar.SYNTAX).is(
-      f.syntax(b.token(ProtoBufKeyword.SYNTAX),
+      f.syntax(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
+        b.token(ProtoBufKeyword.SYNTAX),
         b.token(ProtoBufPunctuator.EQU),
         b.token(ProtoBufLexicalGrammar.STRING_LITERAL),
         b.token(ProtoBufPunctuator.SEMICOLON)));
@@ -54,7 +56,8 @@ public class ProtoBufGrammar {
 
   public MessageTree MESSAGE() {
     return b.<MessageTree>nonterminal(ProtoBufLexicalGrammar.MESSAGE).is(
-      f.message(b.token(ProtoBufKeyword.MESSAGE),
+      f.message(b.optional(b.token(ProtoBufLexicalGrammar.SPACING)),
+        b.token(ProtoBufKeyword.MESSAGE),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.LCURLYBRACE),
         b.token(ProtoBufPunctuator.RCURLYBRACE)));
