@@ -19,12 +19,14 @@
  */
 package org.sonar.plugins.protobuf.api.visitors;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.source.Symbol;
@@ -35,16 +37,10 @@ import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 public class SymbolHighlighterVisitor extends AbstractHighlighterVisitor {
 
   private SymbolTableBuilder symbolTableBuilder;
-
   private Stack<String> msgStack = new Stack<>();
-
   private Map<String, Symbol> messageDefs = new HashMap<>();
   private Multimap<String, SyntaxToken> referencesByFqn = HashMultimap.create();
 
@@ -78,7 +74,8 @@ public class SymbolHighlighterVisitor extends AbstractHighlighterVisitor {
     Symbolizable symbolizable = resourcePerspectives.as(Symbolizable.class, inputFromIOFile(file));
     symbolTableBuilder = symbolizable.newSymbolTableBuilder();
     lineStart = SyntaxHighlighterVisitor.startLines(file, this.charset);
-
+    messageDefs.clear();
+    referencesByFqn.clear();
     List<Issue> issues = super.analyze(file, tree);
 
     for (String fqn : referencesByFqn.keySet()) {
