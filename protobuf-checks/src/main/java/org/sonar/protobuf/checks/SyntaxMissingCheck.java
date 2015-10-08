@@ -20,14 +20,12 @@
 package org.sonar.protobuf.checks;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.check.RuleProperty;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
+import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufSubscriptionCheck;
 import org.sonar.squidbridge.annotations.SqaleConstantRemediation;
@@ -37,45 +35,30 @@ import org.sonar.squidbridge.annotations.Tags;
 import com.google.common.collect.ImmutableList;
 
 @Rule(
-  key = MessageNameCheck.KEY,
-  name = "Message names should comply with a naming convention",
+  key = SyntaxMissingCheck.KEY,
+  name = "Version of Protocol Buffers thru the \"syntax\" keyword should be given",
   priority = Priority.MINOR,
-  tags = {Tags.CONVENTION})
+  tags = {Tags.USER_EXPERIENCE})
 @BelongsToProfile(title = CheckList.SONAR_WAY_PROFILE, priority = Priority.MAJOR)
 @SqaleSubCharacteristic(RulesDefinition.SubCharacteristics.READABILITY)
 @SqaleConstantRemediation("5min")
-public class MessageNameCheck extends ProtoBufSubscriptionCheck {
+public class SyntaxMissingCheck extends ProtoBufSubscriptionCheck {
 
-  public static final String KEY = "PB1000";
-  private static final String MESSAGE = "Rename Message \"%s\" to match the regular expression %s.";
-
-  public static final String DEFAULT = "^[A-Z][a-zA-Z0-9]*$";
-  private Pattern pattern = null;
-
-  @RuleProperty(
-    key = "format",
-    defaultValue = DEFAULT)
-  String format = DEFAULT;
+  public static final String KEY = "PB1001";
+  private static final String MESSAGE = "Set the version of your Protocol Buffers file using the keyword \"syntax\"";
 
   @Override
   public List<Tree.Kind> nodesToVisit() {
-    return ImmutableList.of(Tree.Kind.MESSAGE);
-  }
-
-  @Override
-  public void init() {
-    pattern = Pattern.compile(format);
+    return ImmutableList.of(Tree.Kind.PROTO_UNIT);
   }
 
   @Override
   public void visitNode(Tree tree) {
-    String messageName = ((MessageTree) tree).name();
-
-    if (!pattern.matcher(messageName).matches()) {
-      String message = String.format(MESSAGE, messageName, this.format);
-      context().newIssue(MessageNameCheck.KEY, message)
-        .tree(tree);
+    ProtoBufUnitTree protoUnitTree = ((ProtoBufUnitTree) tree);
+    if (protoUnitTree.syntax() == null) {
+      context().newIssue(SyntaxMissingCheck.KEY, SyntaxMissingCheck.MESSAGE).tree(tree);
     }
+
   }
 
 }

@@ -19,17 +19,17 @@
  */
 package org.sonar.protobuf.checks;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.check.BelongsToProfile;
 import org.sonar.check.Priority;
 import org.sonar.check.Rule;
-import org.sonar.check.RuleProperty;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
+import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
-import org.sonar.plugins.protobuf.api.visitors.ProtoBufSubscriptionCheck;
+import org.sonar.plugins.protobuf.api.visitors.ProtoBufVisitorCheck;
 import org.sonar.squidbridge.annotations.SqaleConstantRemediation;
 import org.sonar.squidbridge.annotations.SqaleSubCharacteristic;
 import org.sonar.squidbridge.annotations.Tags;
@@ -37,45 +37,37 @@ import org.sonar.squidbridge.annotations.Tags;
 import com.google.common.collect.ImmutableList;
 
 @Rule(
-  key = MessageNameCheck.KEY,
-  name = "Message names should comply with a naming convention",
-  priority = Priority.MINOR,
-  tags = {Tags.CONVENTION})
+  key = SyntaxContentNotSupportedCheck.KEY,
+  name = "Protocol Buffers is supporting only 2 versions: proto2 and proto3",
+  priority = Priority.MAJOR,
+  tags = {Tags.USER_EXPERIENCE})
 @BelongsToProfile(title = CheckList.SONAR_WAY_PROFILE, priority = Priority.MAJOR)
 @SqaleSubCharacteristic(RulesDefinition.SubCharacteristics.READABILITY)
 @SqaleConstantRemediation("5min")
-public class MessageNameCheck extends ProtoBufSubscriptionCheck {
+public class SyntaxContentNotSupportedCheck extends ProtoBufVisitorCheck {
 
-  public static final String KEY = "PB1000";
-  private static final String MESSAGE = "Rename Message \"%s\" to match the regular expression %s.";
+  public static final String KEY = "PB1002";
+  private static final String MESSAGE = "\"syntax\" keyword can contain only 2 possible values : proto2 or proto3";
 
-  public static final String DEFAULT = "^[A-Z][a-zA-Z0-9]*$";
-  private Pattern pattern = null;
-
-  @RuleProperty(
-    key = "format",
-    defaultValue = DEFAULT)
-  String format = DEFAULT;
-
-  @Override
-  public List<Tree.Kind> nodesToVisit() {
-    return ImmutableList.of(Tree.Kind.MESSAGE);
-  }
+  private final Set<String> supportedProtoBufVersions = new HashSet<String>();
 
   @Override
   public void init() {
-    pattern = Pattern.compile(format);
+    super.init();
+
+    supportedProtoBufVersions.add("proto2");
+    supportedProtoBufVersions.add("proto3");
   }
 
   @Override
-  public void visitNode(Tree tree) {
-    String messageName = ((MessageTree) tree).name();
-
-    if (!pattern.matcher(messageName).matches()) {
-      String message = String.format(MESSAGE, messageName, this.format);
-      context().newIssue(MessageNameCheck.KEY, message)
-        .tree(tree);
+  public void visitSyntax(SyntaxTree tree) {
+    System.out.println(tree.syntax());
+    if (tree != null) {
+      if (!supportedProtoBufVersions.contains(tree.syntax())) {
+        context().newIssue(SyntaxContentNotSupportedCheck.KEY, SyntaxContentNotSupportedCheck.MESSAGE).tree(tree);
+      }
     }
+
   }
 
 }

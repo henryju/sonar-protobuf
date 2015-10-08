@@ -31,6 +31,7 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.source.Highlightable;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.protobuf.api.ProtoBufKeyword;
@@ -51,10 +52,11 @@ public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
 
   private List<Integer> lineStart;
 
-  public SyntaxHighlighterVisitor(ResourcePerspectives resourcePerspectives, FileSystem fs, Charset charset) {
+  public SyntaxHighlighterVisitor(ResourcePerspectives resourcePerspectives, FileSystem fs) {
     this.resourcePerspectives = resourcePerspectives;
     this.fs = fs;
-    this.charset = charset;
+    this.charset = fs.encoding();
+    ;
 
     ImmutableSet.Builder<String> keywordsBuilder = ImmutableSet.builder();
     keywordsBuilder.add(ProtoBufKeyword.getKeywordValues());
@@ -68,16 +70,6 @@ public class SyntaxHighlighterVisitor extends ProtoBufVisitorCheck {
       highlighting.highlight(start(token), end(token), "k");
     }
     scan(token);
-  }
-
-  @Override
-  public void visitMessage(MessageTree message) {
-
-  }
-
-  @Override
-  public void visitIdentifier(IdentifierTree identifier) {
-
   }
 
   @Override

@@ -38,6 +38,7 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.plugins.protobuf.api.ProtoBuf;
 import org.sonar.plugins.protobuf.api.visitors.ProtoBufCheck;
+import org.sonar.plugins.protobuf.api.visitors.SyntaxHighlighterVisitor;
 import org.sonar.protobuf.ProtoBufAnalyzer;
 import org.sonar.protobuf.checks.CheckList;
 import org.sonar.squidbridge.AstScanner;
@@ -92,6 +93,8 @@ public class ProtoBufSensor implements Sensor {
         phpCheckBuilder.add((ProtoBufCheck) codeVisitor);
       }
     }
+
+    phpCheckBuilder.add(new SyntaxHighlighterVisitor(resourcePerspectives, fileSystem));
 
     ProtoBufAnalyzer analyzer = new ProtoBufAnalyzer(fileSystem.encoding(), phpCheckBuilder.build());
     ArrayList<InputFile> inputFiles = Lists.newArrayList(fileSystem.inputFiles(mainFilePredicate));

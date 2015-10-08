@@ -19,24 +19,21 @@
  */
 package org.sonar.protobuf.checks;
 
-import com.google.common.collect.ImmutableList;
+import org.junit.Test;
+import org.sonar.plugins.protobuf.TestUtils;
+import org.sonar.plugins.protobuf.api.tests.ProtoBufCheckTest;
 
-import java.util.List;
+public class SyntaxMissingCheckTest {
 
-public class CheckList {
+  private SyntaxMissingCheck check = new SyntaxMissingCheck();
 
-  public static final String REPOSITORY_KEY = "protobuf";
-
-  public static final String SONAR_WAY_PROFILE = "SonarQube way";
-
-  private CheckList() {
+  @Test
+  public void syntaxIsMissing() throws Exception {
+    ProtoBufCheckTest.check(check, TestUtils.getCheckFile("SyntaxMissingKOCheck.proto"));
   }
 
-  public static List<Class> getChecks() {
-    return ImmutableList.<Class>of(
-      MessageNameCheck.class,
-      SyntaxContentNotSupportedCheck.class,
-      SyntaxMissingCheck.class
-      );
+  @Test
+  public void syntaxIsGiven() throws Exception {
+    ProtoBufCheckTest.check(check, TestUtils.getCheckFile("SyntaxMissingOKCheck.proto"));
   }
 }
