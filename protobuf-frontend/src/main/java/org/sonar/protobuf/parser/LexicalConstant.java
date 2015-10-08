@@ -55,6 +55,20 @@ public class LexicalConstant {
   private static final String MULTI_LINE_COMMENT = "/\\*[\\s\\S]*?\\*/";
   public static final String COMMENT = "(?:" + SINGLE_LINE_COMMENT1 + "|" + SINGLE_LINE_COMMENT2 + "|" + MULTI_LINE_COMMENT + ")";
 
+  /**
+   * String
+   */
+  public static final String STRING_LITERAL = "(?:"
+    + "\"([^\"\\\\]*+(\\\\[\\s\\S])?+)*+\""
+    + "|'([^'\\\\]*+(\\\\[\\s\\S])?+)*+'"
+    + ")";
+
+  /**
+   * Integer
+   */
+  private static final String DECIMAL = "[1-9][0-9]*+|0";
+  public static final String INTEGER_LITERAL = DECIMAL;
+
   private LexicalConstant() {
   }
 

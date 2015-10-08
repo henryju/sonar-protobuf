@@ -23,16 +23,17 @@ import com.sonar.sslr.api.Grammar;
 import org.junit.Test;
 import org.sonar.protobuf.utils.Assertions;
 
-public class MessageTest {
+public class SyntaxTest {
 
   Grammar g = ProtoBufLexicalGrammar.createGrammarBuilder().build();
 
   @Test
   public void ok() {
-    Assertions.assertThat(ProtoBufLexicalGrammar.MESSAGE)
-      .matches("message Foo { \n }")
-      .matches("# Some comment\nmessage Foo { \n }")
-      .matches("message Foo { }");
+    Assertions.assertThat(ProtoBufLexicalGrammar.SYNTAX)
+      .matches("syntax = \"proto3\";")
+      .matches("syntax = \'proto3\';")
+      .matches("syntax = \'proto3\' ;")
+      .matches("syntax = \"proto2\";");
   }
 
 }

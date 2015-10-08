@@ -24,17 +24,19 @@ import java.util.Collections;
 import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.protobuf.tree.impl.MessageTreeImpl;
 import org.sonar.protobuf.tree.impl.ProtoBufUnitTreeImpl;
+import org.sonar.protobuf.tree.impl.SyntaxTreeImpl;
 import org.sonar.protobuf.tree.impl.expression.IdentifierTreeImpl;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
 public class TreeFactory {
 
-  public ProtoBufUnitTree protoBufUnit(Optional<List<MessageTree>> messages, Optional<InternalSyntaxToken> spacing, InternalSyntaxToken eofToken) {
-    return new ProtoBufUnitTreeImpl(optionalList(messages), eofToken);
+  public ProtoBufUnitTree protoBufUnit(SyntaxTree syntaxTree, Optional<List<MessageTree>> messages, Optional<InternalSyntaxToken> spacing, InternalSyntaxToken eofToken) {
+    return new ProtoBufUnitTreeImpl(syntaxTree, optionalList(messages), eofToken);
   }
 
   public MessageTree message(InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken, InternalSyntaxToken rcurlyToken) {
@@ -43,6 +45,10 @@ public class TreeFactory {
 
   public IdentifierTree identifier(InternalSyntaxToken token) {
     return new IdentifierTreeImpl(token);
+  }
+
+  public SyntaxTree syntax(InternalSyntaxToken token, InternalSyntaxToken eq, InternalSyntaxToken value, InternalSyntaxToken colon) {
+    return new SyntaxTreeImpl(token, eq, value, colon);
   }
 
   private static <T extends Tree> List<T> optionalList(Optional<List<T>> list) {

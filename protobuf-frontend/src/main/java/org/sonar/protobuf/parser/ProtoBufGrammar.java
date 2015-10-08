@@ -22,6 +22,7 @@ package org.sonar.protobuf.parser;
 import com.sonar.sslr.api.typed.GrammarBuilder;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree.Kind;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.protobuf.api.ProtoBufKeyword;
@@ -40,7 +41,15 @@ public class ProtoBufGrammar {
 
   public ProtoBufUnitTree PROTOBUF_UNIT() {
     return b.<ProtoBufUnitTree>nonterminal(ProtoBufLexicalGrammar.PROTOBUF_UNIT).is(
-      f.protoBufUnit(b.zeroOrMore(MESSAGE()), b.optional(b.token(ProtoBufLexicalGrammar.SPACING)), b.token(ProtoBufLexicalGrammar.EOF)));
+      f.protoBufUnit(SYNTAX(), b.zeroOrMore(MESSAGE()), b.optional(b.token(ProtoBufLexicalGrammar.SPACING)), b.token(ProtoBufLexicalGrammar.EOF)));
+  }
+
+  public SyntaxTree SYNTAX() {
+    return b.<SyntaxTree>nonterminal(ProtoBufLexicalGrammar.SYNTAX).is(
+      f.syntax(b.token(ProtoBufKeyword.SYNTAX),
+        b.token(ProtoBufPunctuator.EQU),
+        b.token(ProtoBufLexicalGrammar.STRING_LITERAL),
+        b.token(ProtoBufPunctuator.SEMICOLON)));
   }
 
   public MessageTree MESSAGE() {

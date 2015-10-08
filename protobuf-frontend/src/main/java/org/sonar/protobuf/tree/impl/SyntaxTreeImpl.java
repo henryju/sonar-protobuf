@@ -21,41 +21,29 @@ package org.sonar.protobuf.tree.impl;
 
 import com.google.common.collect.Iterators;
 import java.util.Iterator;
-import java.util.List;
-import org.sonar.plugins.protobuf.api.tree.MessageTree;
-import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.Tree;
-import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.visitors.VisitorCheck;
 import org.sonar.protobuf.tree.impl.lexical.InternalSyntaxToken;
 
-public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTree {
+public class SyntaxTreeImpl extends ProtoBufTree implements SyntaxTree {
 
-  private static final Kind KIND = Kind.PROTO_UNIT;
+  private static final Kind KIND = Kind.SYNTAX;
+  private final InternalSyntaxToken token;
+  private final InternalSyntaxToken eq;
+  private final InternalSyntaxToken value;
+  private final InternalSyntaxToken colon;
 
-  private final InternalSyntaxToken eofToken;
-  private final List<MessageTree> messages;
-  private final SyntaxTree syntaxTree;
-
-  public ProtoBufUnitTreeImpl(SyntaxTree syntaxTree, List<MessageTree> messages, InternalSyntaxToken eofToken) {
-    this.syntaxTree = syntaxTree;
-    this.messages = messages;
-    this.eofToken = eofToken;
-  }
-
-  public List<MessageTree> messages() {
-    return messages;
+  public SyntaxTreeImpl(InternalSyntaxToken token, InternalSyntaxToken eq, InternalSyntaxToken value, InternalSyntaxToken colon) {
+    this.token = token;
+    this.eq = eq;
+    this.value = value;
+    this.colon = colon;
   }
 
   @Override
-  public SyntaxTree syntax() {
-    return syntaxTree;
-  }
-
-  @Override
-  public SyntaxToken eofToken() {
-    return eofToken;
+  public String syntax() {
+    return this.value.text().substring(1, this.value.text().length() - 1);
   }
 
   @Override
@@ -65,13 +53,11 @@ public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTr
 
   @Override
   public Iterator<Tree> childrenIterator() {
-    return Iterators.concat(
-      messages.iterator(),
-      Iterators.singletonIterator(eofToken));
+    return Iterators.<Tree>forArray(token, eq, value, colon);
   }
 
   @Override
   public void accept(VisitorCheck visitor) {
-    visitor.visitProtoBufUnit(this);
+    visitor.visitSyntax(this);
   }
 }

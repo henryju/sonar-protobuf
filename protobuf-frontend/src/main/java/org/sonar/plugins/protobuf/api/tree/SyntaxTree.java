@@ -17,22 +17,10 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.protobuf.parser;
+package org.sonar.plugins.protobuf.api.tree;
 
-import com.sonar.sslr.api.Grammar;
-import org.junit.Test;
-import org.sonar.protobuf.utils.Assertions;
+public interface SyntaxTree extends Tree {
 
-public class MessageTest {
-
-  Grammar g = ProtoBufLexicalGrammar.createGrammarBuilder().build();
-
-  @Test
-  public void ok() {
-    Assertions.assertThat(ProtoBufLexicalGrammar.MESSAGE)
-      .matches("message Foo { \n }")
-      .matches("# Some comment\nmessage Foo { \n }")
-      .matches("message Foo { }");
-  }
+  String syntax();
 
 }

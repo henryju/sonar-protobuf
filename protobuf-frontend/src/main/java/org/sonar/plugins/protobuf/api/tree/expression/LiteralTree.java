@@ -1,6 +1,6 @@
 /*
- * SonarQube Protocol Buffers Plugin
- * Copyright (C) 2015 SonarSource
+ * SonarQube PHP Plugin
+ * Copyright (C) 2010 SonarSource and Akram Ben Aissi
  * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
@@ -17,22 +17,16 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.protobuf.parser;
+package org.sonar.plugins.protobuf.api.tree.expression;
 
-import com.sonar.sslr.api.Grammar;
-import org.junit.Test;
-import org.sonar.protobuf.utils.Assertions;
+import com.google.common.annotations.Beta;
+import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
-public class MessageTest {
+@Beta
+public interface LiteralTree extends ExpressionTree {
 
-  Grammar g = ProtoBufLexicalGrammar.createGrammarBuilder().build();
+  SyntaxToken token();
 
-  @Test
-  public void ok() {
-    Assertions.assertThat(ProtoBufLexicalGrammar.MESSAGE)
-      .matches("message Foo { \n }")
-      .matches("# Some comment\nmessage Foo { \n }")
-      .matches("message Foo { }");
-  }
+  String value();
 
 }

@@ -22,6 +22,7 @@ package org.sonar.plugins.protobuf.api.visitors;
 import com.google.common.annotations.Beta;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
+import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxTrivia;
@@ -38,4 +39,6 @@ public interface VisitorCheck extends ProtoBufCheck {
   void visitMessage(MessageTree message);
 
   void visitIdentifier(IdentifierTree identifier);
+
+  void visitSyntax(SyntaxTree syntaxTree);
 }

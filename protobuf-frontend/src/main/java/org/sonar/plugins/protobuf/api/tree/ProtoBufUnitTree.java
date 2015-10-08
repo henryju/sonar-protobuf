@@ -24,6 +24,8 @@ import org.sonar.plugins.protobuf.api.tree.lexical.SyntaxToken;
 
 public interface ProtoBufUnitTree extends Tree {
 
+  SyntaxTree syntax();
+
   List<MessageTree> messages();
 
   SyntaxToken eofToken();

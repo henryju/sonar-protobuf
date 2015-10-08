@@ -33,6 +33,8 @@ public enum ProtoBufLexicalGrammar implements GrammarRuleKey {
    * Lexical
    */
   EOF,
+  INTEGER_LITERAL,
+  STRING_LITERAL,
 
   /**
    * SPACING
@@ -45,7 +47,7 @@ public enum ProtoBufLexicalGrammar implements GrammarRuleKey {
 
   IDENTIFIER,
 
-  SYNTAX_DECL,
+  SYNTAX,
 
   MESSAGE;
 
@@ -77,6 +79,9 @@ public enum ProtoBufLexicalGrammar implements GrammarRuleKey {
     b.rule(IDENTIFIER).is(SPACING, b.nextNot(KEYWORDS), b.regexp(LexicalConstant.IDENTIFIER));
 
     b.rule(EOF).is(b.token(GenericTokenType.EOF, b.endOfInput())).skip();
+
+    b.rule(INTEGER_LITERAL).is(SPACING, b.regexp(LexicalConstant.INTEGER_LITERAL));
+    b.rule(STRING_LITERAL).is(SPACING, b.regexp(LexicalConstant.STRING_LITERAL));
   }
 
   private static void keywords(LexerlessGrammarBuilder b) {

@@ -47,6 +47,11 @@ public interface Tree {
     PROTO_UNIT(ProtoBufUnitTree.class),
 
     /**
+     * {@link SyntaxTree}
+     */
+    SYNTAX(SyntaxTree.class),
+
+    /**
      * {@link MessageTree}
      */
     MESSAGE(MessageTree.class),
