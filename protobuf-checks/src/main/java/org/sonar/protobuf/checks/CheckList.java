@@ -38,7 +38,8 @@ public class CheckList {
       SyntaxContentNotSupportedCheck.class,
       SyntaxMissingCheck.class,
       RequiredFieldDeprecatedCheck.class,
-      RepeatedFieldNamingConventionCheck.class
+      RepeatedFieldNamingConventionCheck.class,
+      FieldMustNotBeCamelCaseCheck.class
       );
   }
 }

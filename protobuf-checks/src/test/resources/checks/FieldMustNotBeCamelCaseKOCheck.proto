@@ -1,0 +1,5 @@
+message Person {
+  required string name = 1;
+  required int32 IdOfPerson = 2; // NOK
+  optional string EmailOfPerson = 3; // NOK
+}

@@ -49,7 +49,7 @@ public class MessageNameCheck extends ProtoBufSubscriptionCheck {
   public static final String KEY = "PB1000";
   private static final String MESSAGE = "Rename Message \"%s\" to match the regular expression %s.";
 
-  public static final String DEFAULT = "^[A-Z][a-zA-Z0-9]*$";
+  private static final String DEFAULT = "^[A-Z][a-zA-Z0-9]*$";
   private Pattern pattern = null;
 
   @RuleProperty(
