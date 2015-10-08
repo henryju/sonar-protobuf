@@ -24,7 +24,6 @@ import org.sonar.plugins.protobuf.api.tree.FieldTree;
 import org.sonar.plugins.protobuf.api.tree.MessageTree;
 import org.sonar.plugins.protobuf.api.tree.ProtoBufUnitTree;
 import org.sonar.plugins.protobuf.api.tree.SyntaxTree;
-import org.sonar.plugins.protobuf.api.tree.Tree.Kind;
 import org.sonar.plugins.protobuf.api.tree.expression.FieldRuleTree;
 import org.sonar.plugins.protobuf.api.tree.expression.FieldScalarTypeTree;
 import org.sonar.plugins.protobuf.api.tree.expression.IdentifierTree;
@@ -79,7 +78,7 @@ public class ProtoBufGrammar {
   }
 
   public IdentifierTree IDENTIFIER() {
-    return b.<IdentifierTree>nonterminal(Kind.IDENTIFIER).is(
+    return b.<IdentifierTree>nonterminal(ProtoBufLexicalGrammar.IDENTIFIER).is(
       f.identifier(b.token(ProtoBufLexicalGrammar.IDENTIFIER)));
   }
 

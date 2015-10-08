@@ -69,6 +69,7 @@ public class ProtoBufUnitTreeImpl extends ProtoBufTree implements ProtoBufUnitTr
   @Override
   public Iterator<Tree> childrenIterator() {
     return Iterators.concat(
+      Iterators.singletonIterator(syntaxTree),
       messages.iterator(),
       Iterators.singletonIterator(eofToken));
   }
