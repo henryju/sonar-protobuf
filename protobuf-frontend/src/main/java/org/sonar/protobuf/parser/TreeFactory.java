@@ -46,8 +46,8 @@ public class TreeFactory {
   }
 
   public MessageTree message(Optional<InternalSyntaxToken> spacing, InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
-    Optional<List<FieldTree>> fields, InternalSyntaxToken rcurlyToken) {
-    return new MessageTreeImpl(messageToken, name, lcurlyToken, optionalList(fields), rcurlyToken);
+    Optional<List<Tree>> fieldOrMessage, InternalSyntaxToken rcurlyToken) {
+    return new MessageTreeImpl(messageToken, name, lcurlyToken, optionalList(fieldOrMessage), rcurlyToken);
   }
 
   public IdentifierTree identifier(InternalSyntaxToken token) {

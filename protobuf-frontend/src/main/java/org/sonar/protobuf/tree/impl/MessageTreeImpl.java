@@ -20,6 +20,7 @@
 package org.sonar.protobuf.tree.impl;
 
 import com.google.common.collect.Iterators;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.sonar.plugins.protobuf.api.tree.FieldTree;
@@ -37,13 +38,26 @@ public class MessageTreeImpl extends ProtoBufTree implements MessageTree {
   private final InternalSyntaxToken lcurlyToken;
   private final InternalSyntaxToken rcurlyToken;
   private final List<FieldTree> fields;
+  private final List<MessageTree> messages;
+  private final List<Tree> fieldsOrSubMessages;
 
   public MessageTreeImpl(InternalSyntaxToken messageToken, IdentifierTree name, InternalSyntaxToken lcurlyToken,
-    List<FieldTree> fields, InternalSyntaxToken rcurlyToken) {
+    List<Tree> fieldsOrSubMessages, InternalSyntaxToken rcurlyToken) {
     this.messageToken = messageToken;
     this.name = name;
     this.lcurlyToken = lcurlyToken;
-    this.fields = fields;
+    this.fieldsOrSubMessages = fieldsOrSubMessages;
+    this.fields = new ArrayList<>();
+    this.messages = new ArrayList<>();
+    for (Tree tree : fieldsOrSubMessages) {
+      if (tree instanceof FieldTree) {
+        fields.add((FieldTree) tree);
+      } else if (tree instanceof MessageTree) {
+        messages.add((MessageTree) tree);
+      } else {
+        throw new IllegalArgumentException("Unsupported nested type for message: " + tree.getKind());
+      }
+    }
     this.rcurlyToken = rcurlyToken;
   }
 
@@ -65,7 +79,7 @@ public class MessageTreeImpl extends ProtoBufTree implements MessageTree {
   @Override
   public Iterator<Tree> childrenIterator() {
     return Iterators.concat(Iterators.<Tree>forArray(messageToken, name, lcurlyToken),
-      fields.iterator(),
+      fieldsOrSubMessages.iterator(),
       Iterators.singletonIterator(rcurlyToken));
   }
 

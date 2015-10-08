@@ -62,7 +62,7 @@ public class ProtoBufGrammar {
         b.token(ProtoBufKeyword.MESSAGE),
         IDENTIFIER(),
         b.token(ProtoBufPunctuator.LCURLYBRACE),
-        b.zeroOrMore(FIELD()),
+        b.zeroOrMore(b.firstOf(FIELD(), MESSAGE())),
         b.token(ProtoBufPunctuator.RCURLYBRACE)));
   }
 
