@@ -38,7 +38,7 @@ public class MessageNameCustomFormatCheckTest extends CheckTest {
   public void customFormat() throws Exception {
     check.format = "^[A-Z]*$"; 
     List<Issue> expectedIssues = new LinkedList<>();
-    expectedIssues.add(new ProtoBufIssue("test", "Rename Message \"badname\" to match the regular expression " + check.format + ".").line(1));
+    expectedIssues.add(new ProtoBufIssue("test", "Rename \"badname\" to match the regular expression " + check.format + ".").line(1));
     ProtoBufCheckTest.check(check, TestUtils.getCheckFile(fileName), expectedIssues);
   }
 }
